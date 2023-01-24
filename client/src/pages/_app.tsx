@@ -1,18 +1,24 @@
 import '@/styles/globals.css'
+import {SessionProvider} from 'next-auth/react'
 import type { AppProps } from 'next/app'
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
-
-const darkTheme = createTheme({
-  palette:{
-    mode:'dark'
-  }
-})
-export default function App({ Component, pageProps }: AppProps) {
+import {Session} from 'next-auth'
+import {configureStore} from '@reduxjs/toolkit'
+import {Provider} from 'react-redux'
+import  userReducer  from '@/redux/signupdetails'
+import {store} from '@/redux/store'
+import { AppContext } from '@/context/AppContext'
+import { useState } from 'react'
+export default function App({ Component, pageProps }: AppProps<{session:Session}>) {
+  const [userDetails, setUserDetails]= useState({})
   return (
-<ThemeProvider theme={darkTheme}>
-  <CssBaseline />
+    <AppContext.Provider value={{
+      userDetails:userDetails, setUserDetails:setUserDetails
+    }}>
+    <Provider store={store}>
+<SessionProvider session={pageProps.session}>
   <Component {...pageProps} />
-</ThemeProvider>
+</SessionProvider>
+</Provider>
+</AppContext.Provider>
   );
 }

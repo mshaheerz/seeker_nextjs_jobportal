@@ -1,4 +1,4 @@
-import SignUp from "@/components/Login/Signup"
+import SignUp from "@/components/User/Login/Signup"
 function signup() {
   return (
     <SignUp />
