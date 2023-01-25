@@ -3,11 +3,8 @@ import { AppContext } from "@/context/AppContext";
 import { useContext, useEffect } from "react";
 import 'react-toastify/dist/ReactToastify.css';
 import {  RecaptchaVerifier,signOut,onAuthStateChanged,signInWithPhoneNumber,getAuth } from "firebase/auth";
-import app from "@/firebase/firebase"
 import { ToastContainer, toast } from 'react-toastify';
 import {auth} from '@/firebase/firebase'
-
-
 import {
   Select,
   Avatar,
@@ -29,8 +26,6 @@ import React, { useState } from "react";
 import ManageAccounsIcon from "@mui/icons-material/ManageAccounts";
 import { FileUpload } from "@mui/icons-material";
 import { useRouter } from "next/router";
-
-
 
 const darkTheme = createTheme({
   palette: {
@@ -77,33 +72,15 @@ function UserSetup() {
   const [employerType, setEmployerType] = React.useState("");
   const { userDetails, setUserDetails }: any = useContext(AppContext);
   const [confirmObj, setConfirmObj]= useState("")
-  const [error,setError]= useState('')
   const [flag,setFlag] = useState(false)
+  let [pdf, setPdf] = useState<any>();
   const router = useRouter();
-  const toBase64 = (image: Blob) =>
-    new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(image);
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = (error) => reject(error);
-    }).catch((err) => {
-      console.log(err);
-    });
 
-  const handleChange = (event: SelectChangeEvent) => {
-    setState(event.target.value);
-  };
 
-  function setupRecaptcha(number:any){
-    const recaptchaVerifier = new RecaptchaVerifier('recaptcha-container', {}, auth)
-    recaptchaVerifier.render()
-    return signInWithPhoneNumber(auth,number,recaptchaVerifier)
-  }
 
 
   useEffect(() => {
     if (Object.keys(userDetails).length == 0) {
-      
       toast.error('Do not refresh!', {
         position: "top-right",
         autoClose: 5000,
@@ -114,7 +91,6 @@ function UserSetup() {
         progress: undefined,
         theme: "dark",
         });
-      
       router.push('/auth/signup') 
     }else{
       toast.warn('Do not refresh!', {
@@ -128,32 +104,44 @@ function UserSetup() {
       theme: "dark",
       });
     }
-    
-   
   }, [])
-  
-  
+
+
+
+
+
+
+  // pdf converted to base64
+  const toBase64 = (image: Blob) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(image);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+    }).catch((err) => {
+      console.log(err);
+    });
+
+
+
+  const handleChange = (event: SelectChangeEvent) => {
+    setState(event.target.value);
+  };
+
+
+  // firebase otp captcha setup
+  function setupRecaptcha(number:any){
+    const recaptchaVerifier = new RecaptchaVerifier('recaptcha-container', {}, auth)
+    recaptchaVerifier.render()
+    return signInWithPhoneNumber(auth,number,recaptchaVerifier)
+  }
 
   const handleEmployerChange = (event: SelectChangeEvent) => {
     setEmployerType(event.target.value);
   };
-  const [firstname, setFirstName] = useState(false);
-  const [firstNameerr, setFirstNameerr] = useState("");
-  let [pdf, setPdf] = useState<Blob>();
-  // const [lastname, setLastName] = useState(false);
-  // const [lastNameerr, setLastNameerr] = useState("");
-  // const [email, setEmail] = useState(false);
-  // const [emailerr, setEmailErr] = useState("");
-  // const [password, setPassword] = useState(false);
-  // const [passworderr, setPasswordErr] = useState("");
-  // const [cpassword, setCpassword] = useState(false);
-  // const [cpassworderr, setCpasswordErr] = useState("");
-  //states */
+
 
   //submit handle
-
-  // const userdetails = useSelector((state)=>state.userdetails.value)
-  // console.log(userdetails)
   const handleSubmits = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const datas = new FormData(event.currentTarget);
@@ -231,8 +219,8 @@ function UserSetup() {
                     fullWidth
                     id="city"
                     label="City"
-                    error={firstname}
-                    helperText={firstNameerr}
+                    // error={firstname}
+                    // helperText={firstNameerr}
                     autoFocus
                   />
                 </Grid>
@@ -353,7 +341,7 @@ function UserSetup() {
                     <input
                       hidden
                       accept="application/pdf"
-                      onChange={(e) => setPdf(e.target.files[0])}
+                      onChange={(e:any) => setPdf(e.target.files[0])}
                       type="file"
                     />
 
@@ -384,7 +372,7 @@ function UserSetup() {
                   try {
                     if (Object.keys(userDetails).length !== 0) {
                       let number = String(userDetails.phone)
-                      const response = await setupRecaptcha(`+91${number}`);
+                      const response:any = await setupRecaptcha(`+91${number}`);
                       setConfirmObj(response)
                       setFlag(true)
                      

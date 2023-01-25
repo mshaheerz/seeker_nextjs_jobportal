@@ -17,7 +17,7 @@ const userSchema = new mongoose.Schema({
   zip:Number,
   recentjob:String,
   recentcompany:String,
-  jobtype:String,
+  employertype:String,
   school:String,
   resume:String,
   phone:{

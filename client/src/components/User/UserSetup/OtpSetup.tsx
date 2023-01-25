@@ -6,30 +6,24 @@ import { ToastContainer, toast } from 'react-toastify';
 import { auth } from "@/firebase/firebase";
 import { useRouter } from "next/router";
 import {
-  Select,
   Avatar,
   Button,
   CssBaseline,
   TextField,
-  FormControlLabel,
-  Checkbox,
   Link,
   Grid,
-  Paper,
   Container,
   Typography,
   Box,
-  MenuItem,
   SelectChangeEvent,
-  InputLabel,
   FormControl,
-  IconButton,
 } from "@mui/material";
 import React, { useState,useContext } from "react";
-import ManageAccounsIcon from "@mui/icons-material/ManageAccounts";
 import MenuBook from "@mui/icons-material/MenuBook";
-import { PhotoCamera,FileUpload } from "@mui/icons-material";
 import { AppContext } from "@/context/AppContext";
+import axios from "@/config/axios";
+
+
 const darkTheme = createTheme({
   palette: {
     mode: "dark",
@@ -47,6 +41,8 @@ const darkTheme = createTheme({
     },
   },
 });
+
+
 
 function Copyright(props: any) {
   return (
@@ -68,14 +64,7 @@ function Copyright(props: any) {
 
 
 function SkillsSetup() {
-
   const {userDetails, setUserDetails}:any = useContext(AppContext)
-  const [state, setState] = React.useState("");
-
-  const handleChange = (event: SelectChangeEvent) => {
-    setState(event.target.value);
-  };
-  const [otp, setOtp] = useState(false);
   const router = useRouter()
   //states */
 
@@ -85,25 +74,57 @@ function SkillsSetup() {
 
     //input datas
     let otp = data.get("otp")
-  
     if(otp === "" || otp ==null) {
-
+      toast.error(`please input otp`, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        });
     }else{
       try {
-        console.log({otp});
-        console.log({otpVerify: userDetails.otpverify.confirm});
-        
+    
+        console.log(userDetails)
         await userDetails.otpverify.confirm(otp);
-        toast.error(`done mwonu`, {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-          });
+        axios.post('/signup',userDetails).then((response)=>{
+         if(response.data.status ==='success'){
+
+            localStorage.setItem("usertoken",response.data.status==)
+
+
+
+
+         }else{
+          toast.error(`${response.data.message}`, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+            });
+            setTimeout(() => {
+              router.push('/auth/signup')
+            }, 3000);
+         }
+        }).catch((error)=>{
+          toast.error(`${error.message}`, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+            });
+        })
       
       } catch (error:any) {
         toast.error(`${error.message}`, {
@@ -153,6 +174,7 @@ function SkillsSetup() {
           <Typography component="h1" variant="h5">
             Otp verification
           </Typography>
+          <div id='recaptcha-container' />
           <Typography component="h6" variant="h6">
             {userDetails?.phone}
           </Typography>

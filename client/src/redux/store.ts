@@ -1,10 +1,15 @@
-import { configureStore } from '@reduxjs/toolkit'
-import userReducer from '@/redux/signupdetails'
+
+import userAuth from '@/redux/signupdetails'
+
+import {applyMiddleware, configureStore} from '@reduxjs/toolkit'
+import thunk from 'redux-thunk'
 // ...
 
 export const store = configureStore({
   reducer: {
-    user:userReducer
+    user:userAuth.reducer,
+
+
   }
 })
 

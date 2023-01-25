@@ -1,6 +1,8 @@
-import * as React from "react";
+import { useEffect } from "react"; 
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { useDispatch, useSelector } from "react-redux";
+import {userActions} from "@/redux/signupdetails"
 import {
   Avatar,
   Button,
@@ -35,7 +37,6 @@ const darkTheme = createTheme({
     },
   },
 });
-
 function Copyright(props: any) {
   return (
     <Typography
@@ -52,16 +53,33 @@ function Copyright(props: any) {
       {"."}
     </Typography>
   );
+  // const user = useSelector((state)=>state.user.value)
 }
 
+
 function Login() {
+  let dispatch = useDispatch()
+  let smth = useSelector((state)=>state?.user)
+
+
+  useEffect(() => {
+    dispatch(userActions.login({user:'something'}))
+    
+  }, [smth])
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
+   
+    console.log(smth)
+    let obj = {
       email: data.get("email"),
       password: data.get("password"),
-    });
+    };
+    dispatch(userActions.login(obj))
+    
+
+
   };
   return (
     <ThemeProvider theme={darkTheme}>

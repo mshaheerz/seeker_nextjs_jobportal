@@ -13,6 +13,8 @@ import connectDb from './config/dbconnection.js'
 const port = process.env.PORT
 const DATABASE_URL = process.env.DATABASE_URL
 const app = express();
+app.use(bodyParser.json({ limit: "200mb" }));
+app.use(bodyParser.urlencoded({ limit: "200mb",  extended: true, parameterLimit: 1000000 }));
 connectDb(DATABASE_URL)
 
 
@@ -24,7 +26,7 @@ app.use(cors({
 }))
 app.use(logger("dev"))
 app.use(express.urlencoded({ extended:false }));
-app.use(express.json());
+app.use(express.json({extended: false, limit: '50mb'}));
 app.use(express.static("public"))
 app.use(cookieParser())
 

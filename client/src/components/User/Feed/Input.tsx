@@ -1,5 +1,5 @@
 import { useRef, useState } from "react"
-import {XCircleIcon,PhotoIcon, ChartBarIcon,VideoCameraIcon } from "@heroicons/react/24/solid"
+import {XCircleIcon,PhotoIcon, ChartBarIcon,VideoCameraIcon, FaceSmileIcon } from "@heroicons/react/24/solid"
 import Picker from "@emoji-mart/react"
 import { Data } from "emoji-mart"
 import { fabClasses } from "@mui/material"
@@ -78,7 +78,7 @@ function Input() {
                 
 
                 <div className="icon" onClick={()=>setShowEmojis(!showEmojis)}>
-                    <PhotoIcon className="h-[22px] text-[#fff]"/>
+                    <FaceSmileIcon className="h-[22px] text-[#fff]"/>
                     
                 </div>
 

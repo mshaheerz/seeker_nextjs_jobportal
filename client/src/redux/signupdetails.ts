@@ -2,14 +2,15 @@ import { createSlice} from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit'
 
 
-export const userSlice = createSlice({
+ const userSlice = createSlice({
     name:"userDetails",
-    initialState:{value:'fdsa'},
+    initialState:{userDetails:null},
     reducers:{
-        login:(state, action: PayloadAction<any>)=>{
-            state.value= action.payload;
+        login:(state, action)=>{
+            let newData = action.payload
+            state.userDetails= newData.user;
         }
     }
 });
-export const {login} = userSlice.actions;
-export default userSlice.reducer;
+export const userActions = userSlice.actions;
+export default userSlice;
