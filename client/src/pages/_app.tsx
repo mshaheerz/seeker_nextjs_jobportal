@@ -10,6 +10,7 @@ import { AppContext } from '@/context/AppContext'
 import { useState } from 'react'
 
 export default function App({ Component, pageProps }: AppProps<{session:Session}>) {
+  
   const [userDetails, setUserDetails]= useState({})
   return (
     <Provider store={store}>

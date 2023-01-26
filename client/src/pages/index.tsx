@@ -3,10 +3,66 @@ import Image from 'next/image'
 import { Inter } from '@next/font/google'
 import Feed from '@/components/User/Feed/Feed'
 import Sidebar from '@/components/User/Layouts/Sidebar'
+import useSWR from 'swr'
+import axios from '@/config/axios'
+import {useEffect} from 'react'
+import { useRouter } from 'next/router'
+import { useDispatch, useSelector } from 'react-redux'
+import { userActions } from '@/redux/signupdetails'
+
+
+
+const fetcher = async ()=>{
+  
+  const response = await fetch('http://localhost:3000/api/hello')
+  const data = await response.json()
+  return data
+  
+  }
 
 const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
+  const router = useRouter()
+  let dispatch = useDispatch()
+
+
+
+  useEffect(() => {
+   if(localStorage.getItem('usertoken')){
+      axios.get('/isUserAuth',{
+        headers:{'usertoken':localStorage.getItem("usertoken")}
+      }).then((response)=>{
+        if(response.data.status==="failed"){
+          router.push('/auth')
+        }else if(response.data.auth){
+          dispatch(userActions.login(response.data))
+        }else{
+          router.push('/auth')
+        }
+      })
+   }else{
+    router.push('/auth')
+   }
+  
+   
+  }, [])
+  
+
+
+
+
+
+
+
+
+
+  const {data, error}= useSWR('dashboard',fetcher)
+  console.log(data)
+  //data contain api data and error contain error while fetching
+  if(error) return 'an error has occured'
+  if(!data) return 'Loading'
+
   return (
     <>
       <Head>

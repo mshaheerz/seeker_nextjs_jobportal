@@ -1,8 +1,11 @@
-import { useEffect } from "react"; 
+import { useEffect, useState } from "react"; 
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useDispatch, useSelector } from "react-redux";
 import {userActions} from "@/redux/signupdetails"
+import { useRouter } from "next/router";
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from 'react-toastify';
 import {
   Avatar,
   Button,
@@ -19,6 +22,7 @@ import {
 } from "@mui/material";
 import Image from "next/image";
 import {useSession,signIn,signOut} from 'next-auth/react'
+import axios from "@/config/axios";
 
 const darkTheme = createTheme({
   palette: {
@@ -59,24 +63,85 @@ function Copyright(props: any) {
 
 function Login() {
   let dispatch = useDispatch()
+  const router = useRouter()
   let smth = useSelector((state)=>state?.user)
+  const [email, setEmail] = useState(false)
+  const [emailerr, setEmailerr] = useState('')
 
 
   useEffect(() => {
-    dispatch(userActions.login({user:'something'}))
+    if(localStorage.getItem('usertoken')){
+       axios.get('/isUserAuth',{
+         headers:{'usertoken':localStorage.getItem("usertoken")}
+       }).then((response)=>{
+         if(response.data.status==="failed"){
+           router.push('/auth')
+         }else if(response.data.auth){
+           dispatch(userActions.login(response.data))
+           router.push('/')
+         }else{
+           router.push('/auth')
+         }
+       })
+    }else{
+     router.push('/auth')
+    }
+   
     
-  }, [smth])
+   }, [])
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-   
+    let regEmail =/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
     console.log(smth)
     let obj = {
       email: data.get("email"),
       password: data.get("password"),
     };
-    dispatch(userActions.login(obj))
+    if(obj.email && obj.password){
+      if(regEmail.test(obj.email.toString())){
+        axios.post('/signin',obj).then((response)=>{
+          if(response.data.status==='success'){
+            localStorage.setItem('usertoken',response.data.token);
+            router.push('/')
+          }else{
+            toast.error(`OOPS! ${response?.data?.message}`, {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "dark",
+              });
+          }
+        }).catch((error)=>{
+          toast.warn(`OOPS! ${error?.message}`, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+            });
+        })
+      }else{
+        setEmail(true);
+        setEmailerr('Please provide email');
+      }
+    }else{
+      console.log('all fields are required')
+    }
+    
+
+
+
+
+    
     
 
 
@@ -85,6 +150,7 @@ function Login() {
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />
       <Container component="main" maxWidth="sm">
+      <ToastContainer />
         <CssBaseline />
         <Box
           sx={{

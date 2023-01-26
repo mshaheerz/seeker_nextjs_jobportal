@@ -93,7 +93,8 @@ function SkillsSetup() {
         axios.post('/signup',userDetails).then((response)=>{
          if(response.data.status ==='success'){
 
-            localStorage.setItem("usertoken",response.data.status==)
+            localStorage.setItem("usertoken",response.data.token)
+            router.push('/')
 
 
 

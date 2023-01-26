@@ -17,12 +17,12 @@ import {
   Box,
 } from "@mui/material";
 import axios from "@/config/axios";
-import React, { use, useState, useContext } from "react";
+import React, { use, useState, useContext, useEffect } from "react";
 import { useRouter } from "next/router";
 import { useDispatch } from "react-redux";
-import { login } from "@/redux/signupdetails";
 import { AppContext } from "@/context/AppContext";
 import { auth } from "@/firebase/firebase";
+import { userActions } from "@/redux/signupdetails";
 
 const darkTheme = createTheme({
   palette: {
@@ -82,9 +82,29 @@ export default function SignUp() {
   const [phone, setPhone] = useState(false);
   const [phoneerr, setPhoneerr] = useState("");
   //states */
-
   const router = useRouter();
+  const dispatch =   useDispatch()
 
+  useEffect(() => {
+    if(localStorage.getItem('usertoken')){
+       axios.get('/isUserAuth',{
+         headers:{'usertoken':localStorage.getItem("usertoken")}
+       }).then((response)=>{
+         if(response.data.status==="failed"){
+           router.push('/auth')
+         }else if(response.data.auth){
+           dispatch(userActions.login(response.data))
+           router.push('/')
+         }else{
+           router.push('/auth')
+         }
+       })
+    }else{
+     router.push('/auth')
+    }
+   
+    
+   }, [])
   //submit handle
   const handleSubmits = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -110,8 +130,7 @@ export default function SignUp() {
       obj.cpassword
     ) {
       let regName = /^[a-zA-Z]+$/;
-      let regEmail =
-        /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+      let regEmail =/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
       let mob = /^([+]\d{2})?\d{10}$/;
       if (regName.test(obj.firstname.toString())) {
         setFirstName(false);

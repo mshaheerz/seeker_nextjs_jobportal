@@ -106,8 +106,10 @@ export async function signup(req,res){
 
                             })
 
-                            let userdetails= usermodel.findOne({email:obj.email})
+                            let userdetails=await usermodel.findOne({email:obj.email})
                             let userId = userdetails._id;
+                            console.log('----------------------')
+                            console.log(userdetails)
                             const token = jwt.sign({userId},process.env.JWT_SECRET_KEY,{ expiresIn:'24h' })
                             res.json({ "status": "success", "message": "signup success",token:token })
                             
@@ -147,4 +149,66 @@ export async function signup(req,res){
   res.json({ "status": "failed", "message": error.message })
 }
    
+}
+
+
+
+
+export async function signin(req,res){
+  try {
+    let obj = req.body
+    let regEmail =/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+    if(obj.email && obj.password){
+      if(regEmail.test(obj.email.toString())){
+        let user = await usermodel.findOne({email:obj.email})
+        if(user){
+          const isMatch = await bcrypt.compare(obj.password,user.password)
+          if(isMatch){
+            const userId= user._id
+            const token = jwt.sign({userId},process.env.JWT_SECRET_KEY,{expiresIn:'24h'})
+            res.json({ "status": "success", "message": "signin success",token:token })
+          }else{
+            res.json({ "status": "failed", "message": "Password is incorrect" })
+
+          }
+        }else{
+          res.json({ "status": "failed", "message": "Email not registered" })
+
+        }
+      }else{
+        res.json({ "status": "failed", "message": "Enter valid email" })
+
+      }
+    }else{
+      res.json({ "status": "failed", "message": "All fields are required" })
+
+    }
+    
+  } catch (error) {
+    res.json({ "status": "failed", "message": error.message })
+
+  }
+}
+
+
+
+
+export async function isUserAuth (req, res) {
+  try {
+    console.log(req.userId)
+  let userDetails = await usermodel.findById(req.userId)
+  userDetails.auth=true;
+  console.log('koooooy')
+  res.json({
+      "username":userDetails.firstname,
+      "email":userDetails.email,
+      "auth":true,
+      "image":userDetails.image||null
+  })
+  } catch (error) {
+    console.log('evade worked')
+      res.json({"status":"failed", "message":error.message})
+  }
+  
+
 }
