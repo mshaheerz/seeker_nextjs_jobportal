@@ -12,10 +12,11 @@ import { useState } from 'react'
 export default function App({ Component, pageProps }: AppProps<{session:Session}>) {
   
   const [userDetails, setUserDetails]= useState({})
+  const [postRefresh, setPostRefresh]= useState(false)
   return (
     <Provider store={store}>
     <AppContext.Provider value={{
-      userDetails:userDetails, setUserDetails:setUserDetails
+      userDetails:userDetails, setUserDetails:setUserDetails,postRefresh:postRefresh,setPostRefresh:setPostRefresh
     }}>
     
 <SessionProvider session={pageProps.session}>

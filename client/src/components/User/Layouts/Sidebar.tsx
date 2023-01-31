@@ -3,12 +3,12 @@ import Image from "next/image"
 import SidebarLink from "./SidebarLink"
 import {HomeIcon,BriefcaseIcon,HeartIcon, UserIcon,EllipsisHorizontalCircleIcon, InboxIcon, BellIcon, BuildingOffice2Icon, EllipsisVerticalIcon} from "@heroicons/react/24/solid"
 BuildingOffice2Icon
-function Sidebar() {
+function Sidebar({userDetails}:any) {
   return (
     <div className="hidden sm:flex flex-col items-center xl:items-start xl:w-[340px] p-2 fixed h-full">
       <div className="flex item-center justify-center w-14 h-14 hoverAnimation p-0 xl:ml-24">
-         <Image  src={'/images/log_transparent.png'} alt='fds' width={300} height={300}></Image>
-         {/* <h4 className="text-white">SEEKER</h4> */}
+         {/* <Image  src={'/images/log_transparent.png'} alt='fds' width={300} height={300}></Image> */}
+         <h4 className="text-white text-lg ml-2 xl:ml-8 font-bold p-2 ">SEEKER</h4>
       </div>
       <div className="space-y-2.5 mt-4 mb-2.5 xl:ml-24">
         <SidebarLink text='Home' Icon={HomeIcon}  active={true}/>
@@ -23,10 +23,10 @@ function Sidebar() {
     <div className="text-[#d9d9d9] flex item-center justify-center hoverAnimation xl:ml-auto xl:-mr-5 mt-auto">
       <img src="	https://lh3.googleusercontent.com/ogw/AAEL6sgG2UNiqo6FhnY0vomhQbCo9WLthbflYev4z7iaBg=s32-c-mo" alt="loading" className="h-10 w-10 rounded-full xl:mr-2.5" />
       <div className="hidden xl:inline leading-5">
-      <h4 className="font-bold">Shaheer kp</h4>
-      <p className="text-[#6e767d]">mern stack developer</p>
+      <h4 className="font-bold">{userDetails.name}</h4>
+      <p className="text-[#6e767d]">{userDetails.recentjob}</p>
       </div>
-      <EllipsisVerticalIcon className="h-5 hidden xl:inline ml-10" />
+      <EllipsisVerticalIcon className="h-5 hidden xl:inline ml-10 rotate-90" />
     </div>
     </div>
   )

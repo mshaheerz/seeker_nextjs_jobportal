@@ -74,6 +74,7 @@ function SkillsSetup() {
 
     //input datas
     let otp = data.get("otp")
+  
     if(otp === "" || otp ==null) {
       toast.error(`please input otp`, {
         position: "top-right",
@@ -87,8 +88,12 @@ function SkillsSetup() {
         });
     }else{
       try {
+        // setUserDetails({
+        //   ...userDetails,
+        //   otp:otp
+        // })
     
-        console.log(userDetails)
+      
         await userDetails.otpverify.confirm(otp);
         axios.post('/signup',userDetails).then((response)=>{
          if(response.data.status ==='success'){

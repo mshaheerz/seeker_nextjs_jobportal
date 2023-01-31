@@ -1,6 +1,9 @@
 import usermodel from "../model/userSchema.js";
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
+import postmodel from "../model/postSchema.js";
+import commentmodel from "../model/commentSchema.js";
+import likemodel from "../model/likeSchema.js";
 
 export async function validateSignup(req,res){
     try {
@@ -85,7 +88,14 @@ export async function signup(req,res){
                     if(!user){
                         let usertwo = await usermodel.findOne({phone:obj.phone})
                         if(!usertwo){
-
+                          try {
+                      
+                             await obj.otpverify.confirm(obj.otp)
+                            
+                          } catch (error) {
+                              console.log(error)
+                          }
+                         
                             const salt = await bcrypt.genSalt(10);
                             const hashPassword = await bcrypt.hash(obj.password.trim(),salt)
                             await usermodel.create({
@@ -108,8 +118,8 @@ export async function signup(req,res){
 
                             let userdetails=await usermodel.findOne({email:obj.email})
                             let userId = userdetails._id;
-                            console.log('----------------------')
-                            console.log(userdetails)
+                        
+                          
                             const token = jwt.sign({userId},process.env.JWT_SECRET_KEY,{ expiresIn:'24h' })
                             res.json({ "status": "success", "message": "signup success",token:token })
                             
@@ -195,20 +205,169 @@ export async function signin(req,res){
 
 export async function isUserAuth (req, res) {
   try {
-    console.log(req.userId)
+
   let userDetails = await usermodel.findById(req.userId)
   userDetails.auth=true;
-  console.log('koooooy')
   res.json({
-      "username":userDetails.firstname,
+      "userId": userDetails._id,
+      "firstname":userDetails.firstname,
+      "lastname":userDetails.lastname,
+      "recentjob":userDetails.recentjob,
       "email":userDetails.email,
       "auth":true,
       "image":userDetails.image||null
   })
+  
   } catch (error) {
-    console.log('evade worked')
       res.json({"status":"failed", "message":error.message})
   }
   
 
+}
+
+export async function userPost(req,res){
+  try {
+    let obj = req.body
+    if(obj.image || obj.text || obj.video){
+      await postmodel.create({
+      user:req.userId,
+      text:obj.text || null,
+      image:obj.image || null,
+      googleid:obj.googleid,
+      video:obj.video || null
+    })
+
+    res.json({ "status": "success", "message": "Post added successfully" })
+    }else{
+      res.json({"status":"failed", "message":"something went wrong"})
+    }
+
+  } catch (error) {
+     res.json({"status":"failed", "message":error.message})
+  }
+}
+
+
+export async function userPostUpdate(req,res){
+  try {
+    let obj = req.body
+    if(obj.image || obj.text || obj.video){
+      await postmodel.updateOne({googleid:obj.googleid},{
+      user:req.userId,
+      text:obj.text || null,
+      image:obj.image || null,
+      video:obj.video || null
+    })
+
+    res.json({ "status": "success", "message": "Post added successfully" })
+    }else{
+      res.json({"status":"failed", "message":"something went wrong"})
+    }
+
+  } catch (error) {
+     res.json({"status":"failed", "message":error.message})
+  }
+}
+
+
+export async function getposts(req,res){
+  try {
+
+    let posts = await postmodel.find({}).populate("user").sort({updatedAt:-1})
+  
+    
+    res.json({"status":"success","posts":posts})
+  } catch (error) {
+ 
+    res.json({"status":"failed", "message":error.message})
+  }
+}
+
+export async function deletePost(req,res){
+  try {
+    const postId = req.params.id
+    if(postId){
+      await postmodel.findByIdAndDelete(postId)
+      res.json({"status":"success", "message":'post deleted successfully'})
+    }else{
+      res.json({"status":"failed", "message":'something went wrong'})
+    }
+
+  } catch (error) {
+    res.json({"status":"failed", "message":error.message})
+  }
+}
+
+
+export async function fetchComments(req,res){
+  try {
+   const comments =  await commentmodel.find({})
+   console.log(comments)
+    res.json({"status":"success", "message":"message fetched successfylly", comments})
+  } catch (error) {
+    res.json({"status":"failed", "message":error.message})
+  }
+}
+
+export async function addComments(req,res){
+  try {
+   const comments =  await commentmodel.find({})
+   console.log(comments)
+    res.json({"status":"success", "message":"message fetched successfylly", comments})
+  } catch (error) {
+    res.json({"status":"failed", "message":error.message})
+  }
+}
+
+export async function fetchLikes(req,res){
+  try {
+
+   const likes =  await likemodel.find({})
+   console.log(likes)
+    res.json({"status":"success", "message":"message fetched successfylly", likes})
+  } catch (error) {
+    res.json({"status":"failed", "message":error.message})
+  }
+}
+
+
+export async function deleteLikes(req,res){
+  try {
+    const userId= req.params.userId;
+    const postId= req.params.postId;
+  await likemodel.findOneAndDelete({user:userId,post:postId})
+   
+    res.json({"status":"success", "message":"unliked success fully"})
+  } catch (error) {
+    res.json({"status":"failed", "message":error.message})
+  }
+}
+
+
+export async function addLikes(req,res){
+  try {
+   const {userId,postId}=req.body
+   console.log(req.body)
+  await likemodel.create({user:userId,post:postId})
+   
+    res.json({"status":"success", "message":"like added successfully"})
+  } catch (error) {
+    res.json({"status":"failed", "message":error.message})
+  }
+}
+
+
+
+
+export async function getOneposts(req,res){
+  try {
+    const {postId}= req.body
+    let posts = await postmodel.findById(postId).populate("user")
+  
+    
+    res.json({"status":"success","posts":posts})
+  } catch (error) {
+ 
+    res.json({"status":"failed", "message":error.message})
+  }
 }

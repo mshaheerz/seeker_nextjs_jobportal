@@ -21,7 +21,7 @@ connectDb(DATABASE_URL)
 //middlewares
 app.use(cors({
     origin: ['http://localhost:3000'],
-    methods:["GET","POST"],
+    methods:["GET","POST","DELETE","PUT","PATCH"],
     credentials:true,
 }))
 app.use(logger("dev"))

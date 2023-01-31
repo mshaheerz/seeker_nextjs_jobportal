@@ -5,29 +5,28 @@ import Feed from '@/components/User/Feed/Feed'
 import Sidebar from '@/components/User/Layouts/Sidebar'
 import useSWR from 'swr'
 import axios from '@/config/axios'
-import {useEffect} from 'react'
+import {useEffect, useState} from 'react'
 import { useRouter } from 'next/router'
 import { useDispatch, useSelector } from 'react-redux'
-import { userActions } from '@/redux/signupdetails'
+import { user } from '@/redux/signupdetails'
+import Modal from '@/components/User/Feed/Modal'
 
 
 
-const fetcher = async ()=>{
-  
-  const response = await fetch('http://localhost:3000/api/hello')
-  const data = await response.json()
-  return data
-  
-  }
+// const fetcher = async ()=>{
+//   const response = await fetch('http://localhost:3000/api/hello')
+//   const data = await response.json()
+//   return data
+//   }
 
 const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
+  let userinfo = useSelector((state:any)=>state.user)
   const router = useRouter()
-  let dispatch = useDispatch()
-
-
-
+  let dispatch = useDispatch(user)
+  let [userDetails, setUserDetails]= useState({})
+ 
   useEffect(() => {
    if(localStorage.getItem('usertoken')){
       axios.get('/isUserAuth',{
@@ -36,7 +35,9 @@ export default function Home() {
         if(response.data.status==="failed"){
           router.push('/auth')
         }else if(response.data.auth){
-          dispatch(userActions.login(response.data))
+          dispatch(user(response.data))
+          setUserDetails({name:`${response.data.firstname} ${response.data.lastname}`,recentjob:response.data.recentjob})
+          
         }else{
           router.push('/auth')
         }
@@ -45,8 +46,9 @@ export default function Home() {
     router.push('/auth')
    }
   
-   
   }, [])
+
+ 
   
 
 
@@ -57,11 +59,11 @@ export default function Home() {
 
 
 
-  const {data, error}= useSWR('dashboard',fetcher)
-  console.log(data)
-  //data contain api data and error contain error while fetching
-  if(error) return 'an error has occured'
-  if(!data) return 'Loading'
+  // const {data, error}= useSWR('dashboard',fetcher)
+  // console.log(data)
+  // //data contain api data and error contain error while fetching
+  // if(error) return 'an error has occured'
+  // if(!data) return 'Loading'
 
   return (
     <>
@@ -74,13 +76,13 @@ export default function Home() {
       <main className="bg-black min-h-screen flex max-w-[1500px] mx-auto">
         {/* sidebar */}
     
-        <Sidebar />
+        <Sidebar userDetails ={userDetails}/>
         {/* feed */}
         <Feed />
 
         
         {/* widgets */}
-
+          <Modal />
         {/* modal */}
       </main>
       

@@ -1,23 +1,111 @@
-import { useRef, useState } from "react"
+import { useContext, useRef, useState } from "react"
 import {XCircleIcon,PhotoIcon, ChartBarIcon,VideoCameraIcon, FaceSmileIcon } from "@heroicons/react/24/solid"
 import Picker from "@emoji-mart/react"
 import { Data } from "emoji-mart"
 import { fabClasses } from "@mui/material"
-
-
+import VideoLibraryIcon from '@mui/icons-material/VideoLibrary';
+import { db,storage } from "@/firebase/firebase"
+import {addDoc,collection,doc,serverTimestamp,updateDoc} from "@firebase/firestore"
+import {getDownloadURL, ref, uploadString} from "@firebase/storage"
+import axios from "@/config/axios"
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer,toast } from "react-toastify"
+import { useRouter } from "next/router"
+import { AppContext } from "@/context/AppContext"
 function Input() {
    
     const [input, setInput] =useState('')
     const [selectedFile, setSelectedFile]:any =useState(null)
     const [showEmojis, setShowEmojis]= useState(false)
     const [loading, setLoading] = useState(false)
+    const {setPostRefresh,postRefresh}:any = useContext(AppContext)
     const filePickerRef = useRef<HTMLInputElement>(0)
+    const router = useRouter()
 
-    const sendPost=()=>{
+    const sendPost= async ()=>{
         if(loading) return;
         setLoading(true)
+        
+        const docRef = await addDoc(collection(db,'posts'),{
+            text:input,
+            timestamp:serverTimestamp()
+        })
+        axios.post('/userpost', {
+            googleid:docRef.id,
+            text:input
+        },{
+            headers:{"usertoken":localStorage.getItem("usertoken")}
+        }).then((resonse)=>{
+            console.log(resonse.data)
+        }).catch((error)=>{
+            console.log(error.message)
+        })
 
         
+        const imageRef = ref(storage,`posts/${docRef.id}/image`)
+        if(selectedFile){
+            await uploadString(imageRef,selectedFile,"data_url").then(async()=>{
+                const downloadURL = await getDownloadURL(imageRef)
+                
+                await updateDoc(doc(db,"posts",docRef.id),{
+                    image:downloadURL,
+                })
+
+                axios.post('/userpostupdate',{
+                    googleid:docRef.id,
+                    text:input,
+                    image:downloadURL
+                },{
+                    headers:{"usertoken":localStorage.getItem("usertoken")}
+                }).then((response)=>{
+                    if(response.data.status==='success'){
+                        toast.success(`success! ${response?.data?.message}`, {
+                            position: "top-right",
+                            autoClose: 5000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: "dark",
+                            });
+                            
+                    }else{
+                        toast.error(`OOPS! ${response?.data?.message}`, {
+                            position: "top-right",
+                            autoClose: 5000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: "dark",
+                            });
+                    }
+                }).catch((error)=>{
+                    toast.error(`OOPS! ${error.message}`, {
+                        position: "top-right",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "dark",
+                        });
+                })
+
+
+            })
+        }
+
+        setLoading(false);
+        setInput("");
+        setSelectedFile(null);
+        setShowEmojis(false)
+        setPostRefresh(!postRefresh)
+        console.log(postRefresh)
+
     }
 
 
@@ -32,12 +120,23 @@ function Input() {
         setInput(input+imoji)
     }
 
-    
-    const addImageToPost=()=>{
-
+    const addImageToPost=(e:any)=>{
+        try {
+        const reader = new FileReader();
+        if(e.target.files[0]){
+            reader.readAsDataURL(e.target.files[0])
+        }
+        reader.onload = (readerEvent)=>{
+            setSelectedFile(readerEvent.target.result)
+        }
+    } catch (error) {
+        console.log(error)
+        }
+        
     }
   return (
-    <div className={`border-b border-gray-700 p-3 flex space-x-3 overflow-y-scroll overflow-hidden no-scrollbar`}>
+    <div className={`border-b border-gray-700 p-3 flex space-x-3 overflow-y-scroll overflow-hidden no-scrollbar ${loading && "opacity-60"}`}>
+        <ToastContainer />
         <img src="https://lh3.googleusercontent.com/ogw/AAEL6sgG2UNiqo6FhnY0vomhQbCo9WLthbflYev4z7iaBg=s32-c-mo" alt="loading" 
         className="h-11 w-11 rounded-full cursor-pointer" />
         <div className="w-full divide-y divide-gray-700">
@@ -63,48 +162,48 @@ function Input() {
                 )}
               
             </div>
-
-            <div className="flex items-center justify-between pt-2.5">
-               <div className="flex item-center">
-                <div className="icon" onClick={()=>filePickerRef.current.click()}>
-                    <PhotoIcon className="h-[22px] text-[#fff]"/>
-                    <input type="file" onChange={addImageToPost} ref={filePickerRef} hidden/>
-                </div>
-
-                <div className="icon rotate-90">
-                    <ChartBarIcon className="h-[22px] text-[#fff]"/>
-                   
-                </div>
-                
-
-                <div className="icon" onClick={()=>setShowEmojis(!showEmojis)}>
-                    <FaceSmileIcon className="h-[22px] text-[#fff]"/>
+            {!loading && (
+                <div className="flex items-center justify-between pt-2.5">
+                <div className="flex item-center">
+                 <div className="icon" onClick={()=>filePickerRef.current.click()}>
+                     <PhotoIcon className="h-[22px] text-[#fff]"/>
+                     <input type="file" onChange={addImageToPost} ref={filePickerRef} hidden/>
+                 </div>
+ 
+                 <div className="icon ">
+                     <VideoLibraryIcon className="h-[22px] text-[#fff]"/>
                     
+                 </div>
+                 
+ 
+                 <div className="icon" onClick={()=>setShowEmojis(!showEmojis)}>
+                     <FaceSmileIcon className="h-[22px] text-[#fff]"/>
+                     
+                 </div>
+ 
+                 {showEmojis &&(
+                     <Picker
+                     
+                     onEmojiSelect={addEmoji}
+                     data={Data}
+                     skin={{
+                         position:'absolute',
+                         marginTop:"465px",
+                         marginLeft:-40,
+                         maxWidth: "320px",
+                         borderRadius:"20px"
+                     }}
+                     theme="dark"
+                     />
+                 )}
                 </div>
+                <button onClick={sendPost} className="bg-white text-black rounded-2xl px-4 py-1.5 font-bold shadow-md hover:bg-slate-600 disabled:hover:bg-[#1d9bf0] disabled:opacity-50 disabled:cursor-default" disabled={!input.trim() && !selectedFile}>
+                 Send
+                </button>
+             </div>
+            ) }
 
-
-
-
-                {showEmojis &&(
-                    <Picker
-                    
-                    onEmojiSelect={addEmoji}
-                    data={Data}
-                    skin={{
-                        position:'absolute',
-                        marginTop:"465px",
-                        marginLeft:-40,
-                        maxWidth: "320px",
-                        borderRadius:"20px"
-                    }}
-                    theme="dark"
-                    />
-                )}
-               </div>
-               <button className="bg-white text-black rounded-2xl px-4 py-1.5 font-bold shadow-md hover:bg-slate-600 disabled:hover:bg-[#1d9bf0] disabled:opacity-50 disabled:cursor-default" disabled={!input.trim() && !selectedFile}>
-                Send
-               </button>
-            </div>
+            
        
         </div>
     </div>

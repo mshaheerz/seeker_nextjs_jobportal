@@ -1,15 +1,17 @@
 
-import userAuth from '@/redux/signupdetails'
-
+import user from '@/redux/signupdetails'
+import postReducer from "@/redux/setpostid"
+import isopenReducer from "@/redux/setisopen"
 import {applyMiddleware, configureStore} from '@reduxjs/toolkit'
 import thunk from 'redux-thunk'
 // ...
 
 export const store = configureStore({
   reducer: {
-    user:userAuth.reducer,
-
-
+    user:user,
+    setpostid:postReducer,
+    setisopen:isopenReducer
+  
   }
 })
 

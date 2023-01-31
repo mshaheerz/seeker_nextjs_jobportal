@@ -83,7 +83,7 @@ export default function SignUp() {
   const [phoneerr, setPhoneerr] = useState("");
   //states */
   const router = useRouter();
-  const dispatch =   useDispatch()
+  const dispatch = useDispatch()
 
   useEffect(() => {
     if(localStorage.getItem('usertoken')){
@@ -91,7 +91,7 @@ export default function SignUp() {
          headers:{'usertoken':localStorage.getItem("usertoken")}
        }).then((response)=>{
          if(response.data.status==="failed"){
-           router.push('/auth')
+           
          }else if(response.data.auth){
            dispatch(userActions.login(response.data))
            router.push('/')
@@ -99,13 +99,11 @@ export default function SignUp() {
            router.push('/auth')
          }
        })
-    }else{
-     router.push('/auth')
     }
    
     
    }, [])
-  //submit handle
+  // submit handle
   const handleSubmits = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);

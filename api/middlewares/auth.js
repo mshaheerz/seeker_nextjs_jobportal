@@ -1,6 +1,9 @@
 
 import  jwt  from "jsonwebtoken"
+
+
 export async function verifyJWT(req,res,next){
+    try {
     const token = req.headers["usertoken"]
     console.log(req.body)
     if(!token){
@@ -18,10 +21,14 @@ export async function verifyJWT(req,res,next){
                 console.log('worked')
             console.log(decoded)
             req.userId = decoded.userId
-                next();
+            next();
             }
         })
     }
+    } catch (error) {
+        res.json({auth:false,status:"failed",message:error.message})
+    }
+   
 }
 
 

@@ -77,7 +77,7 @@ function Login() {
          if(response.data.status==="failed"){
            router.push('/auth')
          }else if(response.data.auth){
-           dispatch(userActions.login(response.data))
+      
            router.push('/')
          }else{
            router.push('/auth')
@@ -86,14 +86,12 @@ function Login() {
     }else{
      router.push('/auth')
     }
-   
-    
    }, [])
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    let regEmail =/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+    let regEmail =/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
     console.log(smth)
     let obj = {
       email: data.get("email"),
