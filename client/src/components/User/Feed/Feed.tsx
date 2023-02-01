@@ -1,4 +1,3 @@
-import {SparklesIcon} from "@heroicons/react/24/solid"
 import swal from "sweetalert";
 import LogoutIcon from '@mui/icons-material/Logout';
 import Input from "./Input"

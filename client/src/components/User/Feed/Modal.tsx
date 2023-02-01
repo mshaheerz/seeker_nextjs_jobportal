@@ -7,31 +7,39 @@ import { Fragment, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Moment from "react-moment";
 import { CalendarIcon,XMarkIcon, ChartBarIcon } from '@heroicons/react/24/solid';
-import { getPosts, sendComment } from '@/config/endpoints';
+import { getPosts, addComment, fetchComments } from '@/config/endpoints';
 import axios from '@/config/axios';
+import { refreshComment } from '@/redux/refreshcomment';
+
+  
 function Modal() {
 
-
+const commentrefresh = useSelector((state:any)=>state.refreshcomment.value)
 const user = useSelector((state:any)=>state.user.value)
 const isOpen = useSelector((state:any)=>state.setisopen.value)
 const postId = useSelector((state:any)=>state.setpostid.value)
 const dispatchpostid = useDispatch(setpostid)
 const dispatchisopen = useDispatch(setisopen)
+const setCommentRefresh = useDispatch(refreshComment)
 const router = useRouter();
 const [post, setPost] = useState([]);
 const [comment, setComment] = useState("");
 
+
+
+
 useEffect(() => {
     axios.post('/getonepost',{postId:postId},{headers:{"usertoken":localStorage.getItem("usertoken")}}).then((response)=>{
       setPost(response.data.posts)
-   
+      setCommentRefresh(refreshComment(!commentrefresh))
     }).catch((error:any) => {alert(error.message)});
     
   }, [isOpen])
 
 const sendComment = async (e:any) => {
-  e.preventDefault();
-    const data = await sendComment({text:comment,user:user.userId,post:post._id},{"usertoken":localStorage.getItem("usertoken")})
+      
+    const data = await addComment({text:comment,user:user.userId,post:post._id},{"usertoken":localStorage.getItem("usertoken")})
+    console.log(data)
     dispatchisopen( setisopen(false))
     setComment("");
 }

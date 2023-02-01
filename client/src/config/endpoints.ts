@@ -10,9 +10,9 @@ export async function deletePost(formData:any) {
     }
 }
 
-export async function fetchComments() {
+export async function fetchComments(formData:any,header:any) {
     try {
-        const {data} =  await axios.get(`/fetch_comments`)
+        const {data} =  await axios.get(`/fetch_comments/${formData}`,{headers:header})
         return data;
     } catch (error) {
         
@@ -20,9 +20,9 @@ export async function fetchComments() {
 }
 
 
-export async function fetchLikes() {
+export async function fetchLikes(formData:any,header:any) {
     try {
-        const {data} =  await axios.get(`/fetch_likes/`)
+        const {data} =  await axios.get(`/fetch_likes/${formData}`,{headers:header})
         return data;
     } catch (error) {
         
@@ -58,11 +58,20 @@ export async function getPosts(){
     }
 }
 
-export async function sendComment(formData: any,headers:any){
+export async function addComment(formData: any,headers:any){
     try {
         const {data} = await axios.post('/send_post',formData,{headers:headers})
         return data
     } catch (error) {
         
+    }
+}
+
+export async function getOnePost(formData:any, headers:any){
+    try {
+        const {data} = await axios.post('/getonepost',formData,{headers:headers})
+        return data
+    } catch (error) {
+            
     }
 }

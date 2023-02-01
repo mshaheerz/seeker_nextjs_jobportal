@@ -93,7 +93,7 @@ export default function SignUp() {
          if(response.data.status==="failed"){
            
          }else if(response.data.auth){
-           dispatch(userActions.login(response.data))
+  
            router.push('/')
          }else{
            router.push('/auth')

@@ -2,6 +2,7 @@
 import user from '@/redux/signupdetails'
 import postReducer from "@/redux/setpostid"
 import isopenReducer from "@/redux/setisopen"
+import refreshcomment from './refreshcomment'
 import {applyMiddleware, configureStore} from '@reduxjs/toolkit'
 import thunk from 'redux-thunk'
 // ...
@@ -10,7 +11,9 @@ export const store = configureStore({
   reducer: {
     user:user,
     setpostid:postReducer,
-    setisopen:isopenReducer
+    setisopen:isopenReducer,
+    refreshcomment:refreshcomment
+
   
   }
 })

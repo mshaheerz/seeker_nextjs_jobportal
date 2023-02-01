@@ -4,6 +4,7 @@ import { useRouter } from 'next/router'
 import HeartIconout from '@heroicons/react/24/outline/HeartIcon'
 import Moment from 'react-moment'
 import {setpostid} from '@/redux/setpostid'
+import {refreshComment} from '@/redux/refreshcomment'
 import {setisopen} from '@/redux/setisopen'
 import { useDispatch, useSelector } from 'react-redux'
 import { useContext, useEffect, useState } from 'react'
@@ -12,25 +13,41 @@ import { db } from '@/firebase/firebase'
 import { deletePost, unLike, postLike } from '@/config/endpoints'
 import { AppContext } from '@/context/AppContext'
 import { fetchComments,fetchLikes} from '@/config/endpoints'
-import { fabClasses } from '@mui/material'
+import { fabClasses } from '@mui/material'   
+import {HandThumbUpIcon} from '@heroicons/react/24/solid'
 function Posts({post, postPage}:any) {
    
     const router = useRouter()
     const user = useSelector((state:any)=>state.user.value)
     const dispatchpostid = useDispatch(setpostid)
     const dispatchisopen = useDispatch(setisopen)
+    const setCommentRefresh = useDispatch(refreshComment)
     const postss = useSelector((state:any)=>state.setpostid.value)
-    const [comments, setCommets]= useState([])
+    const [comments, setComments]= useState([])
     const [liked, setLiked]= useState(false)
     const [likes, setLikes]= useState([])
     const {setPostRefresh,postRefresh}:any = useContext(AppContext)
     const [changes, setChanges]=useState(fabClasses)
+
+    const refreshcomment = useSelector((state:any)=>state.refreshcomment.value)
       // setpostid(setpostid({name:'fd'}))
      
-   
+  
+
+      useEffect(() => {
+        async function invoke(){
+          const data = await fetchComments(post?._id,{"usertoken":localStorage.getItem("usertoken")})
+          setComments(data.comments)
+          
+        } 
+        invoke();
+       
+      }, [refreshcomment])
+
+
     useEffect(() => {
       async function fetchlike(){
-        const data = await fetchLikes()
+        const data = await fetchLikes(post._id,{"usertoken":localStorage.getItem("usertoken")})
    
         setLikes(data.likes)
       }
@@ -98,7 +115,7 @@ function Posts({post, postPage}:any) {
             </p>
         )}
         <img src={post?.image} alt="" className='round-2xl max-h-[700px] object-cover mr-2' />
-        <div className={`text-[6e767d] flex justify-between w-10/12 ${postPage && "mx-auto"}`}>
+        <div className={`text-[#6e767d] flex justify-between w-10/12 ${postPage && "mx-auto"}`}>
             {/* newwwwwwwwwwwwww */}
             <div
             className="flex items-center space-x-1 group"
@@ -108,7 +125,7 @@ function Posts({post, postPage}:any) {
               dispatchisopen(setisopen(true));
             }}
           >
-            <div className="icon group-hover:bg-[#1d9bf0] group-hover:bg-opacity-10">
+            <div className="icon  group-hover:bg-[#1d9bf0] group-hover:bg-opacity-10">
               <ChatBubbleLeftIcon className="h-5 group-hover:text-[#1d9bf0]" />
             </div>
             {comments.length > 0 && (
@@ -158,9 +175,9 @@ function Posts({post, postPage}:any) {
           >
             <div className="icon group-hover:bg-pink-600/10">
               {liked ? (
-                <HeartIcon className="h-5 text-pink-600" />
+                <HandThumbUpIcon className="h-5 text-pink-600" />
               ) : (
-                <HeartIconout className="h-5 group-hover:text-pink-600" />
+                <HandThumbUpIcon className="h-5 group-hover:text-pink-600" />
               )}
             </div>
             {likes.length > 0 && (
@@ -177,9 +194,7 @@ function Posts({post, postPage}:any) {
           <div className="icon group">
             <ShareIcon className="h-5 group-hover:text-[#1d9bf0]" />
           </div>
-          <div className="icon group">
-            <ChartBarIcon className="h-5 group-hover:text-[#1d9bf0]" />
-          </div>
+     
             {/* newwwwwwwwwwwwwwwwwwwww */}
 
         </div>

@@ -301,30 +301,32 @@ export async function deletePost(req,res){
 
 export async function fetchComments(req,res){
   try {
-   const comments =  await commentmodel.find({})
-   console.log(comments)
+    const postId = req.params.postId
+   const comments =  await commentmodel.find({post:postId}).populate("user")
+   
     res.json({"status":"success", "message":"message fetched successfylly", comments})
   } catch (error) {
     res.json({"status":"failed", "message":error.message})
   }
 }
 
-export async function addComments(req,res){
+export async function addcomment(req,res){
   try {
-   const comments =  await commentmodel.find({})
-   console.log(comments)
-    res.json({"status":"success", "message":"message fetched successfylly", comments})
+    const {text,user,post} = req.body
+    await commentmodel.create({text,user,post})
+    res.json({"status":"success","message":'comment added success'})
   } catch (error) {
+ 
     res.json({"status":"failed", "message":error.message})
   }
 }
+
 
 export async function fetchLikes(req,res){
   try {
-
-   const likes =  await likemodel.find({})
-   console.log(likes)
-    res.json({"status":"success", "message":"message fetched successfylly", likes})
+    console.log(req.params)
+   const likes =  await likemodel.find({post:req.params.postId})
+    res.json({"status":"success", "message":"message fetched successfully", likes})
   } catch (error) {
     res.json({"status":"failed", "message":error.message})
   }
@@ -347,7 +349,7 @@ export async function deleteLikes(req,res){
 export async function addLikes(req,res){
   try {
    const {userId,postId}=req.body
-   console.log(req.body)
+ 
   await likemodel.create({user:userId,post:postId})
    
     res.json({"status":"success", "message":"like added successfully"})
@@ -371,3 +373,5 @@ export async function getOneposts(req,res){
     res.json({"status":"failed", "message":error.message})
   }
 }
+
+

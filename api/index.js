@@ -7,7 +7,7 @@ import cookieParser from 'cookie-parser'
 import bodyParser from 'body-parser'
 import userRouter from './routes/user.js';
 import connectDb from './config/dbconnection.js'
-
+import companyRouter from './routes/company.js';
 
 //variables
 const port = process.env.PORT
@@ -34,6 +34,7 @@ app.use(cookieParser())
 //routes
 
 app.use('/',userRouter)
+app.use('/company',companyRouter)
 
 
 

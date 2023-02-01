@@ -10,6 +10,7 @@ import { useRouter } from 'next/router'
 import { useDispatch, useSelector } from 'react-redux'
 import { user } from '@/redux/signupdetails'
 import Modal from '@/components/User/Feed/Modal'
+import Widgets from '@/components/User/Feed/Widgets'
 
 
 
@@ -80,9 +81,10 @@ export default function Home() {
         {/* feed */}
         <Feed />
 
-        
+        <Widgets />
         {/* widgets */}
-          <Modal />
+        
+        <Modal />
         {/* modal */}
       </main>
       

@@ -2,7 +2,8 @@
 import Image from "next/image"
 import SidebarLink from "./SidebarLink"
 import {HomeIcon,BriefcaseIcon,HeartIcon, UserIcon,EllipsisHorizontalCircleIcon, InboxIcon, BellIcon, BuildingOffice2Icon, EllipsisVerticalIcon} from "@heroicons/react/24/solid"
-BuildingOffice2Icon
+import Link from "next/link"
+
 function Sidebar({userDetails}:any) {
   return (
     <div className="hidden sm:flex flex-col items-center xl:items-start xl:w-[340px] p-2 fixed h-full">
@@ -11,8 +12,8 @@ function Sidebar({userDetails}:any) {
          <h4 className="text-white text-lg ml-2 xl:ml-8 font-bold p-2 ">SEEKER</h4>
       </div>
       <div className="space-y-2.5 mt-4 mb-2.5 xl:ml-24">
-        <SidebarLink text='Home' Icon={HomeIcon}  active={true}/>
-        <SidebarLink text='Jobs' Icon={BriefcaseIcon} active={false} />
+        <Link href={"/"}> <SidebarLink text='Home' Icon={HomeIcon}  active={true}/> </Link>
+        <Link href={"/jobs"}><SidebarLink text='Jobs' Icon={BriefcaseIcon} active={false} /> </Link>
         <SidebarLink text='Notification' Icon={BellIcon} active={false} />
         <SidebarLink text='Messages' Icon={InboxIcon} active={false}/>
         <SidebarLink text='Comapany' Icon={BuildingOffice2Icon} active={false}/>

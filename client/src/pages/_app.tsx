@@ -13,10 +13,12 @@ export default function App({ Component, pageProps }: AppProps<{session:Session}
   
   const [userDetails, setUserDetails]= useState({})
   const [postRefresh, setPostRefresh]= useState(false)
+  const [companyDetails, setCompanyDetails]= useState({})
+  
   return (
     <Provider store={store}>
     <AppContext.Provider value={{
-      userDetails:userDetails, setUserDetails:setUserDetails,postRefresh:postRefresh,setPostRefresh:setPostRefresh
+      userDetails:userDetails,companyDetails,setCompanyDetails, setUserDetails:setUserDetails,postRefresh:postRefresh,setPostRefresh:setPostRefresh
     }}>
     
 <SessionProvider session={pageProps.session}>

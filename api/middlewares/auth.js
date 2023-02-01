@@ -33,8 +33,8 @@ export async function verifyJWT(req,res,next){
 
 
 
-export async function adminJwt(req,res,next){
-    const token = req.headers["x-access-admintoken"]
+export async function companyJwt(req,res,next){
+    const token = req.headers["companytoken"]
    
     if(!token){
         res.send({ "status": "failed", "message": "You need token" })
@@ -47,7 +47,7 @@ export async function adminJwt(req,res,next){
                 res.json({auth:false,status:"failed",message:"failed to authenticate"})
             }else{
             
-            req.adminId =decoded.adminID
+            req.companyId =decoded.companyId
                 next();
             }
         })
