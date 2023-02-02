@@ -74,9 +74,9 @@ function CompanyLogin() {
         async function invoke(){
             if(localStorage.getItem("companytoken")){
                 const data = await companyAuthentication({"companytoken":localStorage.getItem("companytoken")})
-                console.log(data)
+                
                 if(data.status ==="failed"){
-
+                  router.push('/company/login')
                 }else if(data.auth){
                     router.push('/company')
                 }else{
@@ -88,22 +88,7 @@ function CompanyLogin() {
             
         }
         invoke();
-    //   if(localStorage.getItem('usertoken')){
-    //      axios.get('/isUserAuth',{
-    //        headers:{'usertoken':localStorage.getItem("usertoken")}
-    //      }).then((response)=>{
-    //        if(response.data.status==="failed"){
-    //          router.push('/auth')
-    //        }else if(response.data.auth){
-        
-    //          router.push('/')
-    //        }else{
-    //          router.push('/auth')
-    //        }
-    //      })
-    //   }else{
-    //    router.push('/auth')
-    //   }
+   
      }, [])
   
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -117,10 +102,10 @@ function CompanyLogin() {
       };
       if(obj.email && obj.password){
         if(regEmail.test(obj.email.toString())){
-          axios.post('/signin',obj).then((response)=>{
+          axios.post('/company/signin',obj).then((response)=>{
             if(response.data.status==='success'){
-              localStorage.setItem('usertoken',response.data.token);
-              router.push('/')
+              localStorage.setItem('companytoken',response.data.token);
+              router.push('/company')
             }else{
               toast.error(`OOPS! ${response?.data?.message}`, {
                 position: "top-right",

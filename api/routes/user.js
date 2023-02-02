@@ -13,9 +13,12 @@ router.post('/userpostupdate',verifyJWT,userPostUpdate)
 router.post('/getposts',verifyJWT,getposts)
 router.delete('/delete_post/:id',deletePost)
 router.get('/fetch_comments/:postId',verifyJWT, fetchComments)
+router.get('/fetch_commentsNoAuth/:postId', fetchComments)
 router.get('/fetch_likes/:postId',verifyJWT,fetchLikes)
 router.delete('/delete_likes/:userId/:postId',deleteLikes)
 router.post('/add_likes',addLikes)
 router.post('/getOnepost',verifyJWT,getOneposts)
 router.post('/send_post',verifyJWT,addcomment)
+router.post('/getOnepostNoAuth',getOneposts)
+
 export default router

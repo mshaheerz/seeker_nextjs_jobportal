@@ -40,7 +40,7 @@ function Input() {
         }).catch((error)=>{
             console.log(error.message)
         })
-
+   
         
         const imageRef = ref(storage,`posts/${docRef.id}/image`)
         if(selectedFile){

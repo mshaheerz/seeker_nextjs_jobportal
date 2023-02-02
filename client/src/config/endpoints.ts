@@ -19,6 +19,15 @@ export async function fetchComments(formData:any,header:any) {
     }
 }
 
+export async function fetchCommentsNoAuth(formData:any) {
+    try {
+        const {data} =  await axios.get(`/fetch_commentsNoAuth/${formData}`)
+        return data;
+    } catch (error) {
+        
+    }
+}
+
 
 export async function fetchLikes(formData:any,header:any) {
     try {
@@ -73,5 +82,14 @@ export async function getOnePost(formData:any, headers:any){
         return data
     } catch (error) {
             
+    }
+}
+
+export async function getOnePostNoAuth(formData:any){
+    try {
+        const {data} = await axios.post('/getOnepostNoAuth',formData)
+        return data
+    } catch (error) {
+        
     }
 }

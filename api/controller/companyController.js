@@ -89,8 +89,12 @@ export async function Companysignup(req,res){
     try {
   
     let companyDetails = await companymodel.findById(req.companyId)
-    companyDetails.auth=true;
-    res.json(companyDetails)
+    console.log(companyDetails)
+    let obj={
+      ...companyDetails,
+      auth:true
+    }
+    res.json(obj)
     
     } catch (error) {
         res.json({"status":"failed", "message":error.message})
@@ -101,3 +105,38 @@ export async function Companysignup(req,res){
 
 
 
+  export async function companySignin(req,res){
+    try {
+      let obj = req.body
+      let regEmail =/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+      if(obj.email && obj.password){
+        if(regEmail.test(obj.email.toString())){
+          let company = await companymodel.findOne({email:obj.email})
+          if(company){
+            const isMatch = await bcrypt.compare(obj.password,company.password)
+            if(isMatch){
+              const companyId= company._id
+              const token = jwt.sign({companyId},process.env.JWT_SECRET_KEY,{expiresIn:'24h'})
+              res.json({ "status": "success", "message": "company signin success",token:token })
+            }else{
+              res.json({ "status": "failed", "message": "Password is incorrect" })
+  
+            }
+          }else{
+            res.json({ "status": "failed", "message": "Email not registered" })
+  
+          }
+        }else{
+          res.json({ "status": "failed", "message": "Enter valid email" })
+  
+        }
+      }else{
+        res.json({ "status": "failed", "message": "All fields are required" })
+  
+      }
+      
+    } catch (error) {
+      res.json({ "status": "failed", "message": error.message })
+  
+    }
+  }

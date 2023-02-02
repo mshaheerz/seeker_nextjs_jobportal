@@ -7,7 +7,8 @@ import { useEffect } from "react";
 import { companyAuthentication } from "@/config/companyendpoints";
 import { useRouter } from "next/router";
 import swal from 'sweetalert'
-function CompanyPage() {
+import PostJobComponent from "@/components/Company/Job/PostJob";
+function PostJob() {
   const router = useRouter()
   useEffect(() => {
     async function invoke(){
@@ -17,7 +18,7 @@ function CompanyPage() {
             if(data.status ==="failed"){
               router.push('/company/login')
             }else if(data.auth){
-                router.push('/company')
+                router.push('/company/postjob')
             }else{
                 router.push('/company/login')
             }
@@ -74,7 +75,7 @@ function CompanyPage() {
             </div>
             <Logout onClick={logout} className=" h-5 pl-4 mt-4 w-9 rounded-full xl:mr-2.5 cursor-pointer  "/>
           </div>
-          //jobs component
+          <PostJobComponent />
           <div className="pb-72"></div>
         </div>
         {/* feed */}
@@ -88,4 +89,4 @@ function CompanyPage() {
   );
 }
 
-export default CompanyPage;
+export default PostJob;

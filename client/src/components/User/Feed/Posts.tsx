@@ -15,13 +15,16 @@ import { AppContext } from '@/context/AppContext'
 import { fetchComments,fetchLikes} from '@/config/endpoints'
 import { fabClasses } from '@mui/material'   
 import {HandThumbUpIcon} from '@heroicons/react/24/solid'
+import axios from '@/config/axios'
+import { user } from '@/redux/signupdetails'
 function Posts({post, postPage}:any) {
    
     const router = useRouter()
-    const user = useSelector((state:any)=>state.user.value)
+    const users = useSelector((state:any)=>state.user.value)
     const dispatchpostid = useDispatch(setpostid)
     const dispatchisopen = useDispatch(setisopen)
     const setCommentRefresh = useDispatch(refreshComment)
+    const dispatch = useDispatch(user)
     const postss = useSelector((state:any)=>state.setpostid.value)
     const [comments, setComments]= useState([])
     const [liked, setLiked]= useState(false)
@@ -33,6 +36,25 @@ function Posts({post, postPage}:any) {
       // setpostid(setpostid({name:'fd'}))
      
   
+
+      useEffect(() => {
+        if(localStorage.getItem('usertoken')){
+           axios.get('/isUserAuth',{
+             headers:{'usertoken':localStorage.getItem("usertoken")}
+           }).then((response)=>{
+             if(response.data.status==="failed"){
+               router.push('/auth')
+             }else if(response.data.auth){
+               dispatch(user(response.data))
+             }else{
+               router.push('/auth')
+             }
+           })
+        }else{
+         router.push('/auth')
+        }
+       
+       }, [])
 
       useEffect(() => {
         async function invoke(){
@@ -58,7 +80,7 @@ function Posts({post, postPage}:any) {
 
       useEffect(() => 
       setLiked(
-        likes.findIndex((like:any)=>like?.user===user.userId) !==-1
+        likes.findIndex((like:any)=>like?.user===users?.userId) !==-1
       ),
        [likes])
       
@@ -67,12 +89,12 @@ function Posts({post, postPage}:any) {
       const likePost = async() =>{
         if(liked){
          
-           const data = await unLike({postId:post._id,userId:user.userId})
+           const data = await unLike({postId:post._id,userId:users?.userId})
            setLiked(false)
           console.log(data)
         }else{
     
-          const data = await postLike({postId:post._id,userId:user.userId})
+          const data = await postLike({postId:post._id,userId:users?.userId})
           setLiked(true)
           console.log(data)
         }
@@ -114,7 +136,7 @@ function Posts({post, postPage}:any) {
                 {post?.text}
             </p>
         )}
-        <img src={post?.image} alt="" className='round-2xl max-h-[700px] object-cover mr-2' />
+        <img src={post?.image} alt="somthing" className='round-2xl max-h-[700px] object-cover mr-2' />
         <div className={`text-[#6e767d] flex justify-between w-10/12 ${postPage && "mx-auto"}`}>
             {/* newwwwwwwwwwwwww */}
             <div
@@ -135,7 +157,7 @@ function Posts({post, postPage}:any) {
             )}
           </div>
 
-          {user?.userId === post?.user._id ? (
+          {users?.userId === post?.user._id ? (
             <div
               className="flex items-center space-x-1 group"
               onClick={async (e) => {
@@ -204,3 +226,11 @@ function Posts({post, postPage}:any) {
   
 
 export default Posts
+
+function dispatch(arg0: any) {
+  throw new Error('Function not implemented.')
+}
+function setUserDetails(arg0: { name: string; recentjob: any }) {
+  throw new Error('Function not implemented.')
+}
+

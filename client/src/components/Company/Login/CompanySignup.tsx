@@ -29,6 +29,7 @@ import { useDispatch } from "react-redux";
 import { AppContext } from "@/context/AppContext";
 import {auth} from '@/firebase/firebase'
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
+import { companyAuthentication } from "@/config/companyendpoints";
 
 const darkTheme = createTheme({
   palette: {
@@ -94,24 +95,26 @@ export default function CompanySignup() {
   const router = useRouter();
   const dispatch = useDispatch()
 
-//   useEffect(() => {
-//     if(localStorage.getItem('usertoken')){
-//        axios.get('/isUserAuth',{
-//          headers:{'usertoken':localStorage.getItem("usertoken")}
-//        }).then((response)=>{
-//          if(response.data.status==="failed"){
-           
-//          }else if(response.data.auth){
-//            dispatch(userActions.login(response.data))
-//            router.push('/')
-//          }else{
-//            router.push('/auth')
-//          }
-//        })
-//     }
-   
-    
-//    }, [])
+  useEffect(() => {
+    async function invoke(){
+        if(localStorage.getItem("companytoken")){
+            const data = await companyAuthentication({"companytoken":localStorage.getItem("companytoken")})
+            
+            if(data.status ==="failed"){
+              router.push('/company/signup')
+            }else if(data.auth){
+                router.push('/company')
+            }else{
+                router.push('/company/signup')
+            }
+        }else{
+            router.push('/company/signup')
+        }
+        
+    }
+    invoke();
+
+ }, [])
   // submit handle
 
   function setupRecaptcha(number:any){
