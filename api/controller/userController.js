@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken'
 import postmodel from "../model/postSchema.js";
 import commentmodel from "../model/commentSchema.js";
 import likemodel from "../model/likeSchema.js";
+import jobmodel from "../model/jobSchema.js";
 
 export async function validateSignup(req,res){
     try {
@@ -207,7 +208,7 @@ export async function isUserAuth (req, res) {
   try {
 
   let userDetails = await usermodel.findById(req.userId)
-  userDetails.auth=true;
+
   res.json({
       "userId": userDetails._id,
       "firstname":userDetails.firstname,
@@ -370,6 +371,27 @@ export async function getOneposts(req,res){
     res.json({"status":"success","posts":posts})
   } catch (error) {
  
+    res.json({"status":"failed", "message":error.message})
+  }
+}
+
+
+export async function getAllposts(req,res){
+  try {
+    const jobs = await jobmodel.find({}).populate('company')
+    res.json({"status":"success",jobs:jobs})
+  } catch (error) {
+    res.json({"status":"failed", "message":error.message})
+  }
+}
+
+
+export async function getOnePostNoAuth(req,res){
+  try {
+    const jobId = req.params.jobId
+    const jobs = await jobmodel.findById(jobId).populate('company')
+    res.json({"status":"success",jobs:jobs})
+  } catch (error) {
     res.json({"status":"failed", "message":error.message})
   }
 }

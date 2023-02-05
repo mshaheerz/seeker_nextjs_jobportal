@@ -1,12 +1,131 @@
 import Image from "next/image";
 import Multiselect from "multiselect-react-dropdown";
+import 'react-toastify/dist/ReactToastify.css';
+import { useState } from "react";
+import { ToastContainer,toast } from "react-toastify"
+import { companyPostJob } from "@/config/companyendpoints";
+import { useRouter } from "next/router";
+
 function PostJobComponent() {
-  function onSelect(selectedList: any, selectedItem: any) {
-    console.log(selectedList);
-    console.log(selectedItem);
+  const router = useRouter();
+  const [jobtype, setJobType] = useState([]);
+  const [schedule, setSchedule] = useState([]);
+  const [suplimentalpay, setSuplementalpay] = useState([]);
+  
+
+  const [jobtitleerr, setJobtitleerr] = useState(false);
+  const [jobtitleerrMessage, setJobtitleerrMessage] = useState('');
+
+  const [addresserr, setAddresserr] = useState(false);
+  const [addresserrMessage, setAddresserrMessage] = useState('');
+
+  const [cityerr, setCityerr] = useState(false);
+  const [cityerrMessage, setCityerrMessage] = useState('');
+
+  const [jobdescriptionerr, setJobdescriptionerr] = useState(false);
+  const [jobdescriptionerrMessage, setJobdescriptionerrMessage] = useState('')
+
+
+
+  async function sendJobPost(e: any) {
+    e.preventDefault();
+    const data = new FormData(e.currentTarget);
+    let obj = {
+      jobtitle: data.get("jobtitle"),
+      address: data.get("address"),
+      city: data.get("city"),
+      zip: data.get("zip"),
+      amount: data.get("amount"),
+      state: data.get("state"),
+      hirecount: data.get("hirecount"),
+      jobdescription: data.get("jobdescription"),
+      schedule,
+      jobtype,
+      suplimentalpay,
+    };
+  
+
+    if(obj.jobtitle && obj.address && obj.city && obj.state && obj.hirecount && obj.jobdescription){
+      let regName = /^[a-zA-Z-,]+(\s{0,1}[a-zA-Z-, ])*$/;
+      if(regName.test(obj.jobtitle.toString())){
+        setJobtitleerr(false)
+        const data = await companyPostJob(obj,{"companytoken":localStorage.getItem('companytoken')})
+        if(data.status ==='success'){
+          toast.success(`${data.message}`, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+            });
+            router.push('/company')
+        }else{
+ 
+          toast.error(`OOPS! ${data.message}`, {
+           position: "top-right",
+           autoClose: 5000,
+           hideProgressBar: false,
+           closeOnClick: true,
+           pauseOnHover: true,
+           draggable: true,
+           progress: undefined,
+           theme: "dark",
+           });
+        }
+      }else{
+       setJobtitleerr(true)
+       setJobtitleerrMessage('Please enter valid title')
+       toast.error(`OOPS! Please enter valid job title`, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        });
+      }
+    }else{
+      setJobtitleerr(true)
+      setJobtitleerrMessage('please fillout this field')
+      setAddresserr(true);
+      setAddresserrMessage('please fillout this field')
+      setCityerr(true);
+      setCityerrMessage('please fillout this field');
+      setJobdescriptionerr(true);
+      setJobdescriptionerrMessage('please fill out this field')
+      toast.error(`OOPS! Please fill required fields`, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        });
+    }
   }
+
+  function onSelectJobtype(selectedList: any, selectedItem: any) {
+    setJobType(selectedList);
+  }
+
+  function onSelectSchedule(selectedList: any, selectedItem: any) {
+    setSchedule(selectedList);
+  }
+
+  function onSelectSuplemntalpay(selectedList: any, selectedItem: any) {
+    setSuplementalpay(selectedList);
+  }
+
   return (
     <div>
+      <ToastContainer />
       <div className="bg-white pb-4 ml-2 mt-2 mr-5 rounded-2xl">
         <div className="flex pt-4 ml-3 mr-3 pb-4">
           <div>
@@ -26,34 +145,40 @@ function PostJobComponent() {
       </div>
 
       <div className=" border-2 border-gray-500 pb-4 ml-2 mt-2 mr-5 rounded-2xl">
-        <form className="mt-4 mr-3 ml-3 pt-4 ">
+        <form className="mt-4 mr-3 ml-3 pt-4 " onSubmit={sendJobPost}>
           <div className="flex flex-wrap -mx-3 mb-6">
             <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
               <label
                 className="block uppercase tracking-wide text-gray-200 text-xs font-bold mb-2"
-                for="grid-first-name"
+                htmlFor="grid-first-name"
               >
                 Job title
               </label>
               <input
-                className="appearance-none block w-full bg-white text-gray-200 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+                required
+                className="appearance-none block w-full bg-white text-black border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
                 id="grid-first-name"
+                name="jobtitle"
                 type="text"
                 placeholder="Software developer"
               />
-              <p className="text-red-500 text-xs italic">
-                Please fill out this field.
+              {
+                jobtitleerr && <p className="text-red-500 text-xs italic">
+                {jobtitleerrMessage}
               </p>
+              }
+             
             </div>
 
             <div className="w-full md:w-1/2 px-3">
               <label
                 className="block uppercase tracking-wide text-gray-200 text-xs font-bold mb-2"
-                for="grid-state"
+                htmlFor="grid-state"
               >
                 Job Type
               </label>
               <Multiselect
+              
                 style={{
                   chips: {
                     background: "black",
@@ -85,29 +210,30 @@ function PostJobComponent() {
                   "Internship",
                 ]} // Options to display in the dropdown
                 // selectedValues={} // Preselected value to persist in dropdown
-                onSelect={onSelect} // Function will trigger on select event
+                onSelect={onSelectJobtype} // Function will trigger on select event
                 // onRemove={this.onRemove} // Function will trigger on remove event
                 // Property name to display in the dropdown options
               />
-           
             </div>
           </div>
           <div className="flex flex-wrap -mx-3 mb-6">
             <div className="w-full px-3">
               <label
                 className="block uppercase tracking-wide text-gray-200 text-xs font-bold mb-2"
-                for="grid-password"
+                htmlFor="grid-password"
               >
                 Street address
               </label>
               <input
+                required
                 className="appearance-none block w-full bg-white text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                 id=""
+                name="address"
                 type="text"
                 placeholder="street address"
               />
               <p className="text-gray-200 text-xs italic">
-                Make it as long and as crazy as you'd like
+                whre is your job location 
               </p>
             </div>
           </div>
@@ -115,13 +241,15 @@ function PostJobComponent() {
             <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
               <label
                 className="block uppercase tracking-wide text-gray-200 text-xs font-bold mb-2"
-                for="grid-city"
+                htmlFor="grid-city"
               >
                 City
               </label>
               <input
-                className="appearance-none block w-full bg-white text-gray-200 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                required
+                className="appearance-none block w-full bg-white text-black border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                 id="grid-city"
+                name="city"
                 type="text"
                 placeholder="kozhikode"
               />
@@ -129,12 +257,14 @@ function PostJobComponent() {
             <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
               <label
                 className="block uppercase tracking-wide text-gray-200 text-xs font-bold mb-2"
-                for="grid-state"
+                htmlFor="grid-state"
               >
                 State
               </label>
               <div className="relative">
                 <select
+                  required
+                  name="state"
                   className="block appearance-none w-full bg-white border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                   id="grid-state"
                 >
@@ -193,18 +323,19 @@ function PostJobComponent() {
             <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
               <label
                 className="block uppercase tracking-wide text-gray-200 text-xs font-bold mb-2"
-                for="grid-zip"
+                htmlFor="grid-zip"
               >
                 Zip
               </label>
               <input
                 className="appearance-none block w-full bg-white text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                 id="grid-zip"
-                type="text"
+                type="number"
+                name="zip"
                 placeholder="90210"
               />
-               <p className="text-gray-200 text-xs italic">
-                Make it as long and as crazy as you'd like
+              <p className="text-gray-200 text-xs italic">
+                Pin code
               </p>
             </div>
           </div>
@@ -213,27 +344,26 @@ function PostJobComponent() {
             <div className="w-full px-3">
               <label
                 className="block uppercase tracking-wide text-gray-200 text-xs font-bold mb-2"
-                for="grid-password"
+                htmlFor="grid-password"
               >
                 Job description
               </label>
               <textarea
-                
+                required
+                name="jobdescription"
                 className="appearance-none block w-full bg-white text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500 min-h-[70px]"
                 id="grid-password"
                 placeholder="Job description"
               />
               <p className="text-gray-200 text-xs italic">
-                Make it as long and as crazy as you'd like
+                Make it a good description
               </p>
             </div>
 
-
-
-            <div className="w-full md:w-1/3 px-3 mb-6 mt-4 md:mb-0">
+            <div className="w-full md:w-1/2 px-3 mb-6 mt-4 md:mb-0">
               <label
                 className="block uppercase tracking-wide text-gray-200 text-xs font-bold mb-2"
-                for="grid-state"
+                htmlFor="grid-state"
               >
                 What is shedule for this job ?
               </label>
@@ -268,29 +398,26 @@ function PostJobComponent() {
                   "Morning",
                 ]} // Options to display in the dropdown
                 // selectedValues={} // Preselected value to persist in dropdown
-                onSelect={onSelect} // Function will trigger on select event
+                onSelect={onSelectSchedule} // Function will trigger on select event
                 // onRemove={this.onRemove} // Function will trigger on remove event
                 // Property name to display in the dropdown options
               />
-           
             </div>
 
-
-
-
-            <div className="w-full md:w-1/3 px-3 mb-6 mt-4 md:mb-0">
+            <div className=" mb-6 mt-4 md:mb-0 w-full md:w-1/2 px-3">
               <label
                 className="block uppercase tracking-wide text-gray-200 text-xs font-bold mb-2"
-                for="grid-state"
+                htmlFor="grid-state"
               >
                 How many people you want to hire ?
               </label>
               <div className="relative">
                 <select
+                  required
+                  name="hirecount"
                   className="block appearance-none w-full bg-white border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                   id="grid-state"
                 >
-                 
                   <option value="1">1</option>
                   <option value="2">2</option>
                   <option value="3">3</option>
@@ -299,7 +426,6 @@ function PostJobComponent() {
                   <option value="3">6</option>
                   <option value="3">7</option>
                   <option value="3">8</option>
-                  
                 </select>
                 <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                   <svg
@@ -314,13 +440,95 @@ function PostJobComponent() {
             </div>
           </div>
 
-
-          <div className="text-white font-bold text-lg">
-                <h2>Include compensation</h2>
+          <div className="text-black py-4 bg-white font-bold text-lg rounded-md">
+            <div className="flex">
+              <div>
+                <h2 className="ml-3">Include Compensation</h2>
+              </div>
+              <div className="ml-auto mr-4">
+                <Image
+                  src={"/images/compensation.png"}
+                  height={50}
+                  width={50}
+                  alt="compensation"
+                ></Image>
+              </div>
             </div>
-                
+          </div>
 
+          <div className="text-white py-4  font-semibold text-lg rounded-md">
+            What is the pay
+          </div>
 
+          <div className="flex flex-wrap -mx-3 mb-6">
+            <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+              <label
+                className="block uppercase tracking-wide text-gray-200 text-xs font-bold mb-2"
+                htmlFor="grid-first-name"
+              >
+                amount per month
+              </label>
+              <input
+                name="amount"
+                className="appearance-none block w-full bg-white text-black border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+                id="grid-first-name"
+                type="number"
+                placeholder="Software developer"
+              />
+              <p className="text-red-500 text-xs italic">
+                Please fill out this field.
+              </p>
+            </div>
+
+            <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+              <label
+                className="block uppercase tracking-wide text-gray-200 text-xs font-bold mb-2"
+                htmlFor="grid-state"
+              >
+                do you offer any supplemental pay ?
+              </label>
+              <Multiselect
+                style={{
+                  chips: {
+                    background: "black",
+                  },
+                  multiselectContainer: {
+                    color: "black",
+                  },
+                  searchBox: {
+                    padding: "8px",
+                  },
+                  optionContainer: {
+                    color: "white",
+                  },
+                  option: {
+                    background: "#2C2C32",
+                  },
+                  groupHeading: {
+                    background: "black",
+                  },
+                }}
+                isObject={false}
+                placeholder="select"
+                className="  bg-white border rounded-md border-gray-200 text-gray focus:outline-none focus:bg-white focus:border-gray-500"
+                options={["joining-bonus", "overtime-pay", "Perfomance-pay"]} // Options to display in the dropdown
+                // selectedValues={} // Preselected value to persist in dropdown
+                onSelect={onSelectSuplemntalpay} // Function will trigger on select event
+                // onRemove={this.onRemove} // Function will trigger on remove event
+                // Property name to display in the dropdown options
+              />
+            </div>
+          </div>
+          <div className="text-white flex">
+            <div className="ml-auto">
+              <button
+                type="submit"
+                className="bg-[#444d48]   text-white px-14 font-bold rounded py-2 hover:text-black hover:bg-white"
+              >
+                Post now
+              </button>
+            </div>
+          </div>
         </form>
       </div>
     </div>

@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import companymodel from '../model/company/companySchema.js';
+import jobmodel from '../model/jobSchema.js';
 
 export async function Companysignup(req,res){
     try {
@@ -140,3 +141,35 @@ export async function Companysignup(req,res){
   
     }
   }
+
+
+  export async function postJob(req,res){
+    try {
+      const obj = req.body
+      const companyId = req.companyId
+      if(obj.jobtitle && obj.address && obj.city && obj.state && obj.hirecount && obj.jobdescription){
+        await jobmodel.create({
+          company:companyId,
+          ...obj,
+        })
+        res.json({ "status": "success", "message": 'Job posted successfully' })
+      }else{
+         res.json({ "status": "failed", "message": 'Please fill required field' })
+      }
+    } catch (error) {
+      res.json({ "status": "failed", "message": error.message })
+    }
+  }
+
+
+
+  export async function getCompanyJobs(req,res){
+    try {
+      const data = await jobmodel.find({company:req.companyId})
+      res.json(data)
+    } catch (error) {
+      
+    }
+  }
+
+  

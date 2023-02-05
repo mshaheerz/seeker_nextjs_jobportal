@@ -15,9 +15,9 @@ function SidebarCompany() {
       <button onClick={()=>router.push('/company/postjob')} className="hidden xl:inline ml-auto bg-white text-[#000] rounded-md w-52 h-[38px] text-lg font-bold shadow-md hover:bg-[#2f2e2e] hover:text-white ">Post a job</button>
    
       <div className="space-y-2.5 mt-4 mb-2.5 xl:ml-24">
-      
+      <Link href='/company'>
        <SidebarLinkCompany text='Jobs' Icon={BriefcaseIcon} active={true} /> 
-     
+     </Link>
        <SidebarLinkCompany text='Applications' Icon={Email} active={false}/>
        <SidebarLinkCompany text='Notification' Icon={BellIcon} active={false} />
         <SidebarLinkCompany text='Messages' Icon={InboxIcon} active={false}/>

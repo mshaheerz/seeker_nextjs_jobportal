@@ -8,9 +8,13 @@ import {store} from '@/redux/store'
 
 import { AppContext } from '@/context/AppContext'
 import { useState } from 'react'
+import Router from 'next/router';
+import NProgress from 'nprogress'; //nprogress module
+import 'nprogress/nprogress.css'; //styles of nprogress
+//Binding events. 
 
 export default function App({ Component, pageProps }: AppProps<{session:Session}>) {
-  
+  Router.events.on('routeChangeStart', () => NProgress.start()); Router.events.on('routeChangeComplete', () => NProgress.done()); Router.events.on('routeChangeError', () => NProgress.done());
   const [userDetails, setUserDetails]= useState({})
   const [postRefresh, setPostRefresh]= useState(false)
   const [companyDetails, setCompanyDetails]= useState({})

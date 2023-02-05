@@ -1,7 +1,7 @@
 import express from "express";
 const router = express.Router()
 import {verifyJWT} from '../middlewares/auth.js'
-import {addcomment,getOneposts,addLikes,deleteLikes,fetchLikes,fetchComments, deletePost,userPostUpdate,getposts,userPost,signup,signin ,validateSignup,isUserAuth} from "../controller/userController.js";
+import {getOnePostNoAuth,addcomment,getOneposts,addLikes,deleteLikes,fetchLikes,fetchComments, deletePost,userPostUpdate,getposts,userPost,signup,signin ,validateSignup,isUserAuth, getAllposts} from "../controller/userController.js";
 
 
 router.post('/signup',signup)
@@ -20,5 +20,7 @@ router.post('/add_likes',addLikes)
 router.post('/getOnepost',verifyJWT,getOneposts)
 router.post('/send_post',verifyJWT,addcomment)
 router.post('/getOnepostNoAuth',getOneposts)
+router.get('/get_allposts',verifyJWT,getAllposts)
+router.get('/get_onejobNoAuth/:jobId',getOnePostNoAuth)
 
 export default router

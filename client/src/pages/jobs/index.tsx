@@ -79,7 +79,7 @@ function JobsPage() {
             <div className="hoverAnimation w-9 h-9 flex item-center justify-center xl:px-0 ml-auto">
                 <Logout className="h-5 text-white" onClick={logout}/>
             </div>
-          
+
           </div>
           //jobs component
           <Jobs />

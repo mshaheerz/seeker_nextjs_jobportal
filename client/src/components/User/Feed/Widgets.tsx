@@ -15,16 +15,14 @@ function Widgets() {
       </div>
     </div>
 
-    {/* <div className="text-[#d9d9d9] space-y-3 bg-[#15181c] pt-2 rounded-xl w-11/12 xl:w-9/12">
-      <h4 className="font-bold text-xl px-4">New Connections</h4> */}
+    <div className="text-[#d9d9d9] space-y-3 bg-[#15181c] pt-2 rounded-xl w-11/12 xl:w-9/12">
+      <h4 className="font-bold text-xl px-4">Are you a Employer ?</h4>
       {/* {trendingResults.map((result, index) => (
        
       ))} */}
-       {/* <Trending   />
-      <button className="hover:bg-white hover:bg-opacity-[0.03] px-4 py-3 cursor-pointer transition duration-200 ease-out flex items-center justify-between w-full text-[#1d9bf0] font-light">
-        Show more
-      </button>
-    </div> */}
+       <Trending   />
+   
+    </div>
 
     <div className="text-[#d9d9d9] space-y-3 bg-[#15181c] pt-2 rounded-xl w-11/12 xl:w-9/12">
       <h4 className="font-bold text-xl px-4">new connections</h4>

@@ -93,3 +93,21 @@ export async function getOnePostNoAuth(formData:any){
         
     }
 }
+
+export async function getAllJobs(header:any){
+    try {
+        const {data} = await axios.get('/get_allposts',{headers:header})
+        return data;
+    } catch (error) {
+        
+    }
+}
+
+export async function getOneJobNoAuth(formData:any){
+    try {
+        const {data} = await axios.get(`/get_onejobNoAuth/${formData}`)
+        return data
+    } catch (error) {
+        
+    }
+}
