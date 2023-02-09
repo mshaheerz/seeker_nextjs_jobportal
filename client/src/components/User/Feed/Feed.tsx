@@ -9,6 +9,7 @@ import { db } from "@/firebase/firebase"
 import { AppContext } from "@/context/AppContext";
 import {useContext} from 'react'
 
+
 function Feed() {
   const router = useRouter();
   const [posts, setPosts]  =useState([])

@@ -2,7 +2,7 @@ import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import companymodel from '../model/company/companySchema.js';
 import jobmodel from '../model/jobSchema.js';
-
+import jobapplymodel from '../model/jobapplySchema.js';
 export async function Companysignup(req,res){
     try {
       let obj = req.body
@@ -90,7 +90,7 @@ export async function Companysignup(req,res){
     try {
   
     let companyDetails = await companymodel.findById(req.companyId)
-    console.log(companyDetails)
+
     let obj={
       ...companyDetails,
       auth:true
@@ -167,6 +167,17 @@ export async function Companysignup(req,res){
     try {
       const data = await jobmodel.find({company:req.companyId})
       res.json(data)
+    } catch (error) {
+      
+    }
+  }
+
+  
+  export async function getAppliedJobs(req,res){
+    try {
+      const companyId = req.companyId
+      const jobs = await jobapplymodel.find({company:companyId}).populate('user')
+      res.json({"status":"success","message":"data fetched successfully",jobs})
     } catch (error) {
       
     }

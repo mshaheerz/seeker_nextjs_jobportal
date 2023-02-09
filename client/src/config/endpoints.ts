@@ -111,3 +111,21 @@ export async function getOneJobNoAuth(formData:any){
         
     }
 }
+
+export async function ApplyJob(jobId:any,companyId:any,header:any){
+    try {
+        const {data} = await axios.post(`/applyjob`,{jobId,companyId},{headers:header})
+        return data
+    } catch (error) {
+        
+    }
+}
+
+export async function getProfilePosts(header:any){
+    try {
+        const {data} = await axios.get('/get_profile_posts',{headers:header})
+        return data;   
+    } catch (error) {
+        console.log(error)
+    }
+}

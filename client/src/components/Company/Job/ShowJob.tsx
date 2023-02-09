@@ -18,7 +18,7 @@ function ShowJob() {
       if (data) {
         setJobs(data);
       }
-      console.log(data);
+     
     }
     invoke();
   }, []);
@@ -73,7 +73,7 @@ function ShowJob() {
           </div>
         </form>
       </div>
-      {jobs &&
+      {jobs?.length >0 &&
         jobs.map((job) => (
           <div className="ml-4 mr-4 mt-4">
             <div className="w-full p-4 text-center bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700">
@@ -85,35 +85,28 @@ function ShowJob() {
                   </p>
                 </div>
                 <div>
-                  <h4>0 of 1 hired</h4>
+                <select className="bg-white text-black px-4">
+                    <option value="">Active</option>
+                    <option value="">Inactive</option>
+                  </select>
                 </div>
                 <div>
-                  <h4>waiting for admin approval</h4>
-                  <button className="bg-white text-black px-4">Active</button>
+                  {
+                    job?.approved? (
+                      <h4 className="text-green-500 font-bold">Approved</h4>
+                    ):(
+                       <h4 className="text-yellow-500 font-bold">waiting for admin approval</h4>
+                    )
+                  }
+                 
+                  
                 </div>
                 <div className="relative">
-                  action
+                <EllipsisHorizontalCircleIcon className="text-white h-10 cursor-pointer" />
                 
                   
                   </div>
-                  <button
-                    type="button"
-                    data-dial-toggle="speed-dial-menu-dropdown"
-                    aria-controls="speed-dial-menu-dropdown"
-                    aria-expanded="false"
-                    className="flex items-center justify-center ml-auto text-black bg-white rounded-full w-14 h-14 hover:bg-blue-800  dark:hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 focus:outline-none dark:focus:ring-blue-800"
-                  >
-                    <svg
-                      aria-hidden="true"
-                      className="w-8 h-8"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z"></path>
-                    </svg>
-                    <span className="sr-only">Open actions menu</span>
-                  </button>
+                  
                 </div>
               </div>
             </div>

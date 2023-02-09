@@ -167,7 +167,7 @@ function Input() {
                 <div className="flex item-center">
                  <div className="icon" onClick={()=>filePickerRef.current.click()}>
                      <PhotoIcon className="h-[22px] text-[#fff]"/>
-                     <input type="file" onChange={addImageToPost} ref={filePickerRef} hidden/>
+                     <input type="file" onChange={addImageToPost} accept="image/*" ref={filePickerRef} hidden/>
                  </div>
  
                  <div className="icon ">

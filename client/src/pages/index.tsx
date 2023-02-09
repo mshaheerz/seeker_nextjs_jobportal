@@ -11,8 +11,9 @@ import { useDispatch, useSelector } from 'react-redux'
 import { user } from '@/redux/signupdetails'
 import Modal from '@/components/User/Feed/Modal'
 import Widgets from '@/components/User/Feed/Widgets'
-
-
+import BottomNavigationBar from '@/components/Company/Layouts/BottomNavigationBar'
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from 'react-toastify';
 
 // const fetcher = async ()=>{
 //   const response = await fetch('http://localhost:3000/api/hello')
@@ -35,13 +36,21 @@ export default function Home() {
       }).then((response)=>{
         if(response.data.status==="failed"){
           router.push('/auth')
-        }else if(response.data.auth){
+        }else if(!response.data.isBanned){
+        if(response.data.auth){
           dispatch(user(response.data))
           setUserDetails({name:`${response.data.firstname} ${response.data.lastname}`,recentjob:response.data.recentjob})
           
         }else{
           router.push('/auth')
         }
+        } else{
+          localStorage.removeItem('usertoken')
+          
+
+          
+        }
+        
       })
    }else{
     router.push('/auth')
@@ -76,7 +85,7 @@ export default function Home() {
       </Head>
       <main className="bg-black min-h-screen flex max-w-[1500px] mx-auto">
         {/* sidebar */}
-    
+        <ToastContainer />
         <Sidebar userDetails ={userDetails}/>
         {/* feed */}
         <Feed />
@@ -86,6 +95,7 @@ export default function Home() {
         
         <Modal />
         {/* modal */}
+       <BottomNavigationBar />
       </main>
       
      

@@ -25,7 +25,7 @@ function Widgets() {
     </div>
 
     <div className="text-[#d9d9d9] space-y-3 bg-[#15181c] pt-2 rounded-xl w-11/12 xl:w-9/12">
-      <h4 className="font-bold text-xl px-4">new connections</h4>
+      <h4 className="font-bold text-xl px-4">New chats</h4>
       {/* {followResults.map((result, index) => ( */}
         <div
           className="hover:bg-white hover:bg-opacity-[0.03] px-4 py-2 cursor-pointer transition duration-200 ease-out flex items-center"
@@ -45,7 +45,7 @@ function Widgets() {
             <h5 className="text-gray-500 text-[15px]">result.tag</h5>
           </div>
           <button className="ml-auto bg-white text-black rounded-full font-bold text-sm py-1.5 px-3.5">
-            Follow
+            chat
           </button>
         </div>
       {/* ))} */}

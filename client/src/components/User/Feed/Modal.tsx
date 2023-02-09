@@ -127,17 +127,7 @@ const sendComment = async (e:any) => {
                           <ChartBarIcon className="text-[#1d9bf0] h-[22px]" />
                         </div>
 
-                        <div className="icon rotate-90">
-                          <ChartBarIcon className="text-[#1d9bf0] h-[22px]" />
-                        </div>
-
-                        <div className="icon">
-                          <ChartBarIcon className="text-[#1d9bf0] h-[22px]" />
-                        </div>
-
-                        <div className="icon">
-                          <CalendarIcon className="text-[#1d9bf0] h-[22px]" />
-                        </div>
+       
                       </div>
                       <button
                         className="bg-[#1d9bf0] text-white rounded-full px-4 py-1.5 font-bold shadow-md hover:bg-[#1a8cd8] disabled:hover:bg-[#1d9bf0] disabled:opacity-50 disabled:cursor-default"
@@ -145,7 +135,7 @@ const sendComment = async (e:any) => {
                         onClick={sendComment}
                         disabled={!comment.trim()}
                       >
-                        Reply
+                        Comment
                       </button>
                     </div>
                   </div>

@@ -5,6 +5,7 @@ import postmodel from "../model/postSchema.js";
 import commentmodel from "../model/commentSchema.js";
 import likemodel from "../model/likeSchema.js";
 import jobmodel from "../model/jobSchema.js";
+import jobapplymodel from "../model/jobapplySchema.js";
 
 export async function validateSignup(req,res){
     try {
@@ -215,6 +216,13 @@ export async function isUserAuth (req, res) {
       "lastname":userDetails.lastname,
       "recentjob":userDetails.recentjob,
       "email":userDetails.email,
+      "isBanned":userDetails.isBanned,
+      "city":userDetails.city,
+      "state":userDetails.state,
+      "zip":userDetails.zip,
+      "resume":userDetails.resume,
+      "school":userDetails.school,
+      "recentcompany":userDetails.recentcompany,
       "auth":true,
       "image":userDetails.image||null
   })
@@ -325,7 +333,7 @@ export async function addcomment(req,res){
 
 export async function fetchLikes(req,res){
   try {
-    console.log(req.params)
+ 
    const likes =  await likemodel.find({post:req.params.postId})
     res.json({"status":"success", "message":"message fetched successfully", likes})
   } catch (error) {
@@ -378,7 +386,7 @@ export async function getOneposts(req,res){
 
 export async function getAllposts(req,res){
   try {
-    const jobs = await jobmodel.find({}).populate('company')
+    const jobs = await jobmodel.find({approved:true}).populate('company')
     res.json({"status":"success",jobs:jobs})
   } catch (error) {
     res.json({"status":"failed", "message":error.message})
@@ -397,3 +405,36 @@ export async function getOnePostNoAuth(req,res){
 }
 
 
+export async function applyJob(req,res){
+  try {
+    const userId = req.userId
+    const {jobId,companyId}=req.body
+    const isApplyd = await jobapplymodel.findOne({job:jobId,company:companyId,user:userId})
+   
+    if(isApplyd){
+      res.json({"status":"failed",message:'job already applied'})
+    }else{
+       await jobapplymodel.create({job:jobId,company:companyId,user:userId})
+       res.json({"status":"success",message:'job applied success'})
+    }
+   
+   
+
+  } catch (error) {
+    res.json({"status":"failed", "message":error.message})
+  }
+}
+
+
+export async function getProfilePosts(req,res){
+  try {
+
+    let posts = await postmodel.find({user:req.userId}).populate("user").sort({updatedAt:-1})
+  
+    
+    res.json({"status":"success","posts":posts})
+  } catch (error) {
+ 
+    res.json({"status":"failed", "message":error.message})
+  }
+}

@@ -1,7 +1,7 @@
 import express from "express";
 const router = express.Router()
 import {verifyJWT} from '../middlewares/auth.js'
-import {getOnePostNoAuth,addcomment,getOneposts,addLikes,deleteLikes,fetchLikes,fetchComments, deletePost,userPostUpdate,getposts,userPost,signup,signin ,validateSignup,isUserAuth, getAllposts} from "../controller/userController.js";
+import {getProfilePosts,applyJob,getOnePostNoAuth,addcomment,getOneposts,addLikes,deleteLikes,fetchLikes,fetchComments, deletePost,userPostUpdate,getposts,userPost,signup,signin ,validateSignup,isUserAuth, getAllposts} from "../controller/userController.js";
 
 
 router.post('/signup',signup)
@@ -22,5 +22,8 @@ router.post('/send_post',verifyJWT,addcomment)
 router.post('/getOnepostNoAuth',getOneposts)
 router.get('/get_allposts',verifyJWT,getAllposts)
 router.get('/get_onejobNoAuth/:jobId',getOnePostNoAuth)
+router.post('/ApplyJob',verifyJWT,applyJob)
+router.get('/get_profile_posts',verifyJWT,getProfilePosts)
+
 
 export default router

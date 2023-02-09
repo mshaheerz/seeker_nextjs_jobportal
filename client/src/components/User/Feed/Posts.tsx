@@ -17,6 +17,9 @@ import { fabClasses } from '@mui/material'
 import {HandThumbUpIcon} from '@heroicons/react/24/solid'
 import axios from '@/config/axios'
 import { user } from '@/redux/signupdetails'
+import swal from 'sweetalert'
+
+import { TwitterShareButton,OKShareButton } from 'react-share';
 function Posts({post, postPage}:any) {
    
     const router = useRouter()
@@ -26,9 +29,9 @@ function Posts({post, postPage}:any) {
     const setCommentRefresh = useDispatch(refreshComment)
     const dispatch = useDispatch(user)
     const postss = useSelector((state:any)=>state.setpostid.value)
-    const [comments, setComments]= useState([])
+    const [comments, setComments]= useState(['1'])
     const [liked, setLiked]= useState(false)
-    const [likes, setLikes]= useState([])
+    const [likes, setLikes]= useState(['1'])
     const {setPostRefresh,postRefresh}:any = useContext(AppContext)
     const [changes, setChanges]=useState(fabClasses)
 
@@ -59,6 +62,7 @@ function Posts({post, postPage}:any) {
       useEffect(() => {
         async function invoke(){
           const data = await fetchComments(post?._id,{"usertoken":localStorage.getItem("usertoken")})
+          
           setComments(data.comments)
           
         } 
@@ -80,7 +84,7 @@ function Posts({post, postPage}:any) {
 
       useEffect(() => 
       setLiked(
-        likes.findIndex((like:any)=>like?.user===users?.userId) !==-1
+        likes?.findIndex((like:any)=>like?.user===users?.userId) !==-1
       ),
        [likes])
       
@@ -150,9 +154,9 @@ function Posts({post, postPage}:any) {
             <div className="icon  group-hover:bg-[#1d9bf0] group-hover:bg-opacity-10">
               <ChatBubbleLeftIcon className="h-5 group-hover:text-[#1d9bf0]" />
             </div>
-            {comments.length > 0 && (
+            {comments?.length > 0 && (
               <span className="group-hover:text-[#1d9bf0] text-sm">
-                {comments.length}
+                {comments?.length}
               </span>
             )}
           </div>
@@ -162,6 +166,16 @@ function Posts({post, postPage}:any) {
               className="flex items-center space-x-1 group"
               onClick={async (e) => {
                 e.stopPropagation();
+                swal({
+                  title: "Are you sure?",
+                  background:'black',
+                  text: "post delete",
+                  icon: "warning",
+                  buttons: true,
+                  dangerMode: true,
+                })
+                .then(async (willDelete) => {
+                  if (willDelete) {
                 console.log(post.googleid)
                 deleteDoc(doc(db, "posts", post?.googleid))
                 const data = await deletePost(post._id)
@@ -174,6 +188,9 @@ function Posts({post, postPage}:any) {
                 }else{
                     //error message 
                 }
+                  } 
+                });
+              
               }}
             >
               <div className="icon group-hover:bg-red-600/10">
@@ -202,19 +219,21 @@ function Posts({post, postPage}:any) {
                 <HandThumbUpIcon className="h-5 group-hover:text-pink-600" />
               )}
             </div>
-            {likes.length > 0 && (
+            {likes?.length > 0 && (
               <span
                 className={`group-hover:text-pink-600 text-sm ${
                   liked && "text-pink-600"
                 }`}
               >
-                {likes.length}
+                {likes?.length}
               </span>
             )}
           </div>
 
           <div className="icon group">
-            <ShareIcon className="h-5 group-hover:text-[#1d9bf0]" />
+            <OKShareButton  quote={'Dummy text!'} url={'http://localhost:3000/'} >
+              <ShareIcon className="h-5 group-hover:text-[#1d9bf0]"/>
+              </OKShareButton>
           </div>
      
             {/* newwwwwwwwwwwwwwwwwwwww */}

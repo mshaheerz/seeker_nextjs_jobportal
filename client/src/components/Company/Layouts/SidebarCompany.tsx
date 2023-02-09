@@ -18,7 +18,9 @@ function SidebarCompany() {
       <Link href='/company'>
        <SidebarLinkCompany text='Jobs' Icon={BriefcaseIcon} active={true} /> 
      </Link>
+     <Link href='/company/applications'>
        <SidebarLinkCompany text='Applications' Icon={Email} active={false}/>
+       </Link>
        <SidebarLinkCompany text='Notification' Icon={BellIcon} active={false} />
         <SidebarLinkCompany text='Messages' Icon={InboxIcon} active={false}/>
         <SidebarLinkCompany text='Questions' Icon={Help} active={false} />

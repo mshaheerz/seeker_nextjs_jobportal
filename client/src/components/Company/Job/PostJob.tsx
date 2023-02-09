@@ -473,7 +473,7 @@ function PostJobComponent() {
                 className="appearance-none block w-full bg-white text-black border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
                 id="grid-first-name"
                 type="number"
-                placeholder="Software developer"
+                placeholder="30000 per month"
               />
               <p className="text-red-500 text-xs italic">
                 Please fill out this field.

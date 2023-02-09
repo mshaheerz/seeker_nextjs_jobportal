@@ -19,6 +19,7 @@ const jobSchema = new mongoose.Schema({
     state:String,
     suplimentalpay:Array,
     zip:Number,
+    approved:{type:Boolean, default:false},
     isBanned:{type:Boolean, default:false},
   
  
