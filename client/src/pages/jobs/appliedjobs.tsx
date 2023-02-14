@@ -8,24 +8,19 @@ import { useRouter } from "next/router";
 import Head from "next/head";
 import { BriefcaseIcon } from "@heroicons/react/24/solid";
 import Jobs from "@/components/User/Jobs/Jobs";
+import UserAppliedJobs from "@/components/User/Jobs/UserAppliedJobs";
 import { Logout } from "@mui/icons-material";
 import swal from "sweetalert";
 import BottomNavigationBar from "@/components/Company/Layouts/BottomNavigationBar";
 import Widgets from "@/components/User/Feed/Widgets";
-import UserProfile from "@/components/User/UserProfile";
-import { AppContext } from "@/context/AppContext";
-import {useContext} from 'react'
-import { getProfilePosts } from "@/config/endpoints";
-import Posts from "@/components/User/Feed/Posts";
-import UserInfos from "@/components/User/UserInfos";
-function Profile() {
 
+
+
+function AppliedJobsPage() {
   let dispatch = useDispatch(user);
-  const [posts, setPosts]  =useState([])
-  const {setPostRefresh,postRefresh}:any = useContext(AppContext)
-  const users = useSelector((state:any)=>state.user.value)
   let [userDetails, setUserDetails] = useState({});
   const router = useRouter();
+  const users = useSelector((state:any)=>state.user.value)
   useEffect(() => {
     if (localStorage.getItem("usertoken")) {
       axios
@@ -41,8 +36,6 @@ function Profile() {
               name: `${response.data.firstname} ${response.data.lastname}`,
               recentjob: response.data.recentjob,
             });
-
-
           } else {
             router.push("/auth");
           }
@@ -52,20 +45,6 @@ function Profile() {
     }
   }, []);
 
- 
-  
-  useEffect(() => {
-
-    async function invoke(){
-      const data = await getProfilePosts({'usertoken':localStorage.getItem('usertoken')})
-      console.log(data.posts)
-      setPosts(data.posts)
-    }
-    invoke();
- 
-    
- 
-  }, [postRefresh])
 
   const logout=()=>{
     swal({
@@ -101,27 +80,15 @@ function Profile() {
                 className="h-7 text-white"
               />
             </div>
-            Profile
+            Jobs
             <div className="hoverAnimation w-9 h-9 flex item-center justify-center xl:px-0 ml-auto">
                 <Logout className="h-5 text-white" onClick={logout}/>
             </div>
 
           </div>
-       
-          <UserProfile users={users}/>
-
-
-       <UserInfos users={users} />
-         
-
-
-          <div className="pb-72 mt-5 text-white">
-          {posts && posts.map((post)=> <Posts key={post._id} id={post._id} post={post} />
-    
-    )}
-
-          </div>
-
+          //jobs component
+          <UserAppliedJobs />
+          <div className="pb-72"></div>
         </div>
 
         {/* feed */}
@@ -136,4 +103,4 @@ function Profile() {
   );
 }
 
-export default Profile;
+export default AppliedJobsPage;

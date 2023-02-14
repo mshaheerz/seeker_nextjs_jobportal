@@ -17,6 +17,7 @@ function ShowJob() {
       });
       if (data) {
         setJobs(data);
+        
       }
      
     }
@@ -102,7 +103,7 @@ function ShowJob() {
                   
                 </div>
                 <div className="relative">
-                <EllipsisHorizontalCircleIcon className="text-white h-10 cursor-pointer" />
+                <EllipsisHorizontalCircleIcon className="text-white h-10 cursor-pointer" onClick={()=>router.push(`company/editjob/${job._id}`)} />
                 
                   
                   </div>

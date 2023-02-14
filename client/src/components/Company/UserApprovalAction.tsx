@@ -5,8 +5,9 @@ import { Check, Save } from "@mui/icons-material";
 import { flagUser } from "@/config/companyendpoints";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
-import { approveJob } from "@/config/companyendpoints";
-function JobAction({ params, rowId, setRowId, refresh, setRefresh }: any) {
+import { approveUser } from "@/config/companyendpoints";
+
+function JobApprovalAction({ params, rowId, setRowId, refresh, setRefresh }: any) {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const handleSubmit = async () => {
@@ -14,8 +15,8 @@ function JobAction({ params, rowId, setRowId, refresh, setRefresh }: any) {
 
     const { approve, _id } = params.row;
     console.log(approve);
-    const data = await approveJob(approve, _id, {
-      admintoken: localStorage.getItem("admintoken"),
+    const data = await approveUser(approve, _id, {
+      companytoken: localStorage.getItem("companytoken"),
     });
     if (data.status === "success") {
       toast.success(`job status successfully updated`, {
@@ -96,4 +97,4 @@ function JobAction({ params, rowId, setRowId, refresh, setRefresh }: any) {
   );
 }
 
-export default JobAction;
+export default JobApprovalAction;

@@ -10,8 +10,9 @@ import { useRouter } from "next/router";
 import { companyInfo } from '@/redux/companyinfo'
 import { useDispatch, useSelector } from "react-redux";
 import swal from 'sweetalert'
-import AppliedJobs from "@/components/Company/AppliedJobs";
-function jobApplications() {
+
+import ApprovedJobs from "@/components/Company/ApprovedJobs";
+function ApprovedUsers() {
 
   let setCompanydetails = useDispatch(companyInfo)
 
@@ -26,7 +27,7 @@ function jobApplications() {
             if(data.status ==="failed"){
               router.push('/company/login')
             }else if(data.auth){
-                router.push('/company/applications')
+                router.push('/company/approvedusers')
             }else{
                 router.push('/company/login')
             }
@@ -83,7 +84,8 @@ function jobApplications() {
             </div>
             <Logout onClick={logout} className=" h-5 pl-4 mt-4 w-9 rounded-full xl:mr-2.5 cursor-pointer  "/>
           </div>
-         <AppliedJobs />
+          
+         <ApprovedJobs />
           <div className="pb-72"></div>
         </div>
         {/* feed */}
@@ -97,4 +99,4 @@ function jobApplications() {
   );
 }
 
-export default jobApplications;
+export default ApprovedUsers;

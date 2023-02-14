@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 
 
-const jobappliySchema = new mongoose.Schema({
+const UserJobAppliedSchema = new mongoose.Schema({
     user:{
         type:mongoose.Types.ObjectId,
         ref:'user',
@@ -13,15 +13,11 @@ const jobappliySchema = new mongoose.Schema({
         ref:'jobs',
         required:true
         },
-    company:{
+    company:{                   
         type:mongoose.Types.ObjectId,
         ref:'company',
         required:true
-        },
-    status:{
-        type:String,
-        default:'pending',
-    }                    
+        }, 
         
 },
 {
@@ -30,5 +26,5 @@ const jobappliySchema = new mongoose.Schema({
 );
 
 
-const jobapplymodel = mongoose.model("applyjob",jobappliySchema )
-export default jobapplymodel
+const userjobapplymodel = mongoose.model("userjobapplied",UserJobAppliedSchema )
+export default userjobapplymodel

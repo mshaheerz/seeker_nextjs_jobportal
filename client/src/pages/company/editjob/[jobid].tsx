@@ -1,32 +1,34 @@
-
 import Head from "next/head";
-import ShowJob from "@/components/Company/Job/ShowJob";
+
 import SidebarCompany from "@/components/Company/Layouts/SidebarCompany";
 import { BriefcaseIcon, EllipsisVerticalIcon,BuildingOffice2Icon } from "@heroicons/react/24/solid";
 import { Logout } from "@mui/icons-material";
-import { use, useEffect } from "react";
+import { useEffect } from "react";
 import { companyAuthentication } from "@/config/companyendpoints";
 import { useRouter } from "next/router";
+import swal from 'sweetalert'
 import { companyInfo } from '@/redux/companyinfo'
 import { useDispatch, useSelector } from "react-redux";
-import swal from 'sweetalert'
-import AppliedJobs from "@/components/Company/AppliedJobs";
-function jobApplications() {
+import EditJobComponent from "@/components/Company/Job/EditJobComponent";
+import { getOneJobNoAuth } from "@/config/endpoints";
 
+function EditJob({job}:any) {
+
+  
   let setCompanydetails = useDispatch(companyInfo)
 
+  
   let companyDetails = useSelector((state:any)=>state.companyinfo.value)
   const router = useRouter()
   useEffect(() => {
     async function invoke(){
         if(localStorage.getItem("companytoken")){
             const data = await companyAuthentication({"companytoken":localStorage.getItem("companytoken")})
-            console.log(data._doc)
             setCompanydetails(companyInfo(data._doc))
             if(data.status ==="failed"){
               router.push('/company/login')
             }else if(data.auth){
-                router.push('/company/applications')
+         
             }else{
                 router.push('/company/login')
             }
@@ -72,7 +74,7 @@ function jobApplications() {
             <div className="hoverAnimation w-9 h-9 flex items-center justify-center xl:px-0">
               <BriefcaseIcon className="h-7 text-white" />
             </div>
-            Job Application
+            Jobs
             <div className="text-[#d9d9d9] flex item-center justify-center hoverAnimation sm:ml-auto xl:-mr-5 ml-auto mt-auto">
             <BuildingOffice2Icon className="h-10 w-10 rounded-full xl:mr-2.5"/>
               <div className="hidden xl:inline leading-4">
@@ -83,7 +85,7 @@ function jobApplications() {
             </div>
             <Logout onClick={logout} className=" h-5 pl-4 mt-4 w-9 rounded-full xl:mr-2.5 cursor-pointer  "/>
           </div>
-         <AppliedJobs />
+          <EditJobComponent job={job} />
           <div className="pb-72"></div>
         </div>
         {/* feed */}
@@ -97,4 +99,19 @@ function jobApplications() {
   );
 }
 
-export default jobApplications;
+
+
+export default EditJob;
+
+
+export async function getServerSideProps(context: any) {
+  const jobId = context.params.jobid;
+  const data = await getOneJobNoAuth(jobId)
+
+  return {
+    props: {
+        job:data?.jobs || null
+      
+    },
+  };
+}

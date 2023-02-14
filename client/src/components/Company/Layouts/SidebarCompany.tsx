@@ -1,7 +1,8 @@
 import Link from "next/link"
 import SidebarLinkCompany from "./SidebarLinkCompany"
 import { BellIcon, BriefcaseIcon, EllipsisVerticalIcon, InboxIcon } from "@heroicons/react/24/solid"
-import { Email ,Help} from "@mui/icons-material"
+
+import { ApprovalRounded, Email ,Help} from "@mui/icons-material"
 import { useRouter } from "next/router"
 function SidebarCompany() {
   const router = useRouter()
@@ -20,6 +21,9 @@ function SidebarCompany() {
      </Link>
      <Link href='/company/applications'>
        <SidebarLinkCompany text='Applications' Icon={Email} active={false}/>
+       </Link>
+       <Link href='/company/approvedusers'>
+       <SidebarLinkCompany text='Approved users' Icon={ApprovalRounded} active={false} />
        </Link>
        <SidebarLinkCompany text='Notification' Icon={BellIcon} active={false} />
         <SidebarLinkCompany text='Messages' Icon={InboxIcon} active={false}/>

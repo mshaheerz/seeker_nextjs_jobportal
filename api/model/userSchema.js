@@ -20,6 +20,8 @@ const userSchema = new mongoose.Schema({
   employertype:String,
   school:String,
   resume:String,
+  image:String,
+  cover:String,
   phone:{
     type: String,
   },

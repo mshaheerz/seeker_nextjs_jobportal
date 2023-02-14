@@ -6,26 +6,36 @@ import { useDispatch, useSelector } from "react-redux";
 import { user } from "@/redux/signupdetails";
 import { useRouter } from "next/router";
 import Head from "next/head";
+
 import { BriefcaseIcon } from "@heroicons/react/24/solid";
 import Jobs from "@/components/User/Jobs/Jobs";
-import { Logout } from "@mui/icons-material";
+import { ArrowBack, Logout } from "@mui/icons-material";
 import swal from "sweetalert";
 import BottomNavigationBar from "@/components/Company/Layouts/BottomNavigationBar";
 import Widgets from "@/components/User/Feed/Widgets";
 import UserProfile from "@/components/User/UserProfile";
 import { AppContext } from "@/context/AppContext";
 import {useContext} from 'react'
-import { getProfilePosts } from "@/config/endpoints";
+import { CompanyWiseJobFetch, getOneCompanyNoAuth, getProfilePosts } from "@/config/endpoints";
 import Posts from "@/components/User/Feed/Posts";
 import UserInfos from "@/components/User/UserInfos";
-function Profile() {
+import CompanyProfile from "@/components/User/CompanyProfile";
+import CompanyInfos from "@/components/User/CompanyInfos";
+import JobContainer from "@/components/Company/JobContainer";
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from 'react-toastify';
+
+function CompanDetailsPage({company}:any) {
 
   let dispatch = useDispatch(user);
-  const [posts, setPosts]  =useState([])
+  const [jobs, setJobs]  =useState([])
   const {setPostRefresh,postRefresh}:any = useContext(AppContext)
   const users = useSelector((state:any)=>state.user.value)
   let [userDetails, setUserDetails] = useState({});
+  const [refresh , setRefresh]= useState(false)
   const router = useRouter();
+
+
   useEffect(() => {
     if (localStorage.getItem("usertoken")) {
       axios
@@ -53,13 +63,15 @@ function Profile() {
   }, []);
 
  
+
+
   
   useEffect(() => {
 
     async function invoke(){
-      const data = await getProfilePosts({'usertoken':localStorage.getItem('usertoken')})
-      console.log(data.posts)
-      setPosts(data.posts)
+      const data = await CompanyWiseJobFetch(company?._id,{'usertoken':localStorage.getItem('usertoken')})
+      console.log(data)
+      setJobs(data?.jobs)
     }
     invoke();
  
@@ -96,29 +108,49 @@ function Profile() {
         <div className="flex-grow border-l border-r border-gray-700 max-w-2xl sm:ml-[73px] xl:ml-[370px]">
           <div className="flex item-center px-1.5 py-2 border-b border-r border-gray-700 text-[#d9d9d9] font-semibold text-xl gap-x-4 sticky top-0 z-50 bg-black">
             <div className="hoverAnimation w-9 h-9 flex items-center justify-center xl:px-0">
-              <BriefcaseIcon
+              <ArrowBack
                 onClick={() => router.back()}
                 className="h-7 text-white"
               />
             </div>
-            Profile
+            Company Details
             <div className="hoverAnimation w-9 h-9 flex item-center justify-center xl:px-0 ml-auto">
                 <Logout className="h-5 text-white" onClick={logout}/>
             </div>
 
           </div>
        
-          <UserProfile users={users}/>
+          <CompanyProfile company={company}/>
 
 
-       <UserInfos users={users} />
+       <CompanyInfos company={company} />
          
-
-
           <div className="pb-72 mt-5 text-white">
-          {posts && posts.map((post)=> <Posts key={post._id} id={post._id} post={post} />
-    
-    )}
+          <h4 className="ml-5 font-semibold ">Jobs</h4>
+          <div className=" flex items-center justify-center">
+            
+      <ToastContainer />
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-2 p-5 cursor-pointer">
+      
+      {jobs &&
+        
+          jobs.map((job)=>(<JobContainer job={job} applied={false} refresh={refresh} setRefresh={setRefresh} />)
+          
+
+   
+
+        )
+      }
+       
+
+
+
+
+
+      </div>
+    </div>
+
+
 
           </div>
 
@@ -136,4 +168,18 @@ function Profile() {
   );
 }
 
-export default Profile;
+export default CompanDetailsPage;
+
+
+export async function getServerSideProps(context: any) {
+    const companyId = context.params.companyid;
+    const data = await getOneCompanyNoAuth(companyId)
+  
+    return {
+      props: {
+          company:data?.company || null
+        
+      },
+    };
+  }
+  

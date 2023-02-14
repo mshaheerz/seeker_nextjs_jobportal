@@ -15,13 +15,12 @@ function Jobs() {
   useEffect(() =>{
     async function invoke(){
 
-     
-      const data = await getAllJobs({'usertoken':localStorage.getItem('usertoken')})
+       const data = await getUserApplydJob({'usertoken':localStorage.getItem('usertoken')})
+        console.log(data)
       if(data?.jobs){
-      
         setJobs(data.jobs)
       }
-     
+      
       
     }
     invoke();
@@ -36,7 +35,7 @@ function Jobs() {
       
       {jobs &&
         
-          jobs.map((job)=>(<JobContainer job={job} applied={false} refresh={refresh} setRefresh={setRefresh} />)
+          jobs.map((job)=>(<JobContainer job={job?.job} jobs={job} applied={true} refresh={refresh} setRefresh={setRefresh} />)
           
 
    

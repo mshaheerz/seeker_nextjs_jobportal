@@ -11,9 +11,10 @@ import { BriefcaseIcon, HeartIcon } from "@heroicons/react/24/solid";
 import Jobs from "@/components/User/Jobs/Jobs";
 import { ArrowBack, Logout } from "@mui/icons-material";
 import swal from "sweetalert";
-import { getOneJobNoAuth } from "@/config/endpoints";
+import { getOneApplydJob, getOneJobNoAuth } from "@/config/endpoints";
 function JobDetailsPage({job}) {
   let dispatch = useDispatch(user);
+  const [applyd, setApplyd] = useState(false)
   let [userDetails, setUserDetails] = useState({});
   const router = useRouter();
   useEffect(() => {
@@ -40,6 +41,18 @@ function JobDetailsPage({job}) {
     }
   }, []);
 
+
+  useEffect(() =>{
+    async function invoke(){
+      const data = await getOneApplydJob(job._id,{'usertoken':localStorage.getItem('usertoken')})
+        console.log(data)
+      if(data?.status==='success'){
+    
+        setApplyd(true)
+      }
+    }
+    invoke();
+  },[])
   const logout = () => {
     swal({
       title: "Are you sure?",
@@ -93,12 +106,18 @@ function JobDetailsPage({job}) {
               </p>
               <p className="text-white">{job?.amount} per month</p>
               <div className="mt-4">
-                <button
+                {!applyd?( <button
                   type="button"
                   className=" inline-block px-6 py-2.5 bg-white text-black font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-gray-300 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
                 >
                   Apply
-                </button>
+                </button>):( <button
+                  type="button"
+                  className=" inline-block px-6 py-2.5 bg-gray-600 text-black font-medium text-xs leading-tight uppercase rounded shadow-md hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
+                >
+                  Applied
+                </button>)}
+               
 
                 <HeartIcon className="text-white h-7 inline-block ml-3 hover:text-pink-500 cursor-pointer" />
               </div>

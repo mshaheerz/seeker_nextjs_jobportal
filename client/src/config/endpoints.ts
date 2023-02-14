@@ -81,7 +81,7 @@ export async function getOnePost(formData:any, headers:any){
         const {data} = await axios.post('/getonepost',formData,{headers:headers})
         return data
     } catch (error) {
-            
+        
     }
 }
 
@@ -112,6 +112,15 @@ export async function getOneJobNoAuth(formData:any){
     }
 }
 
+export async function getOneCompanyNoAuth(formData:any){
+    try {
+        const {data} = await axios.get(`/get_onecompanyNoAuth/${formData}`)
+        return data
+    } catch (error) {
+        
+    }
+}
+
 export async function ApplyJob(jobId:any,companyId:any,header:any){
     try {
         const {data} = await axios.post(`/applyjob`,{jobId,companyId},{headers:header})
@@ -127,5 +136,53 @@ export async function getProfilePosts(header:any){
         return data;   
     } catch (error) {
         console.log(error)
+    }
+}
+
+export async function editProfile(formData: any,header:any){
+    try {
+        const {data} = await axios.put('/profile_edit',formData,{headers:header})
+        return data
+    } catch (error) {
+        alert('pee')
+    }
+}
+
+
+export async function getOneApplydJob(formData: any,header:any){
+    try {
+        const {data} = await axios.get(`/get_oneapplied_job/${formData}`,{headers:header})
+        return data
+    } catch (error) {
+       
+    }
+}
+
+
+export async function getUserApplydJob(header:any){
+    try {
+        const {data} = await axios.get(`/get_applied_job`,{headers:header})
+        return data
+    } catch (error) {
+       
+    }
+}
+
+
+export async function getAllCompanies(header:any){
+    try {
+        const {data} = await axios.get('/get_allcompanies',{headers:header})
+        return data;
+    } catch (error) {
+        
+    }
+}
+
+export async function CompanyWiseJobFetch(formData:any,header:any){
+    try {
+        const {data} = await axios.get(`/get_companywise_job/${formData}`,{headers:header})
+        return data;
+    } catch (error) {
+        
     }
 }

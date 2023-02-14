@@ -24,7 +24,7 @@ import { ToastContainer, toast } from 'react-toastify';
 const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
-  let userinfo = useSelector((state:any)=>state.user)
+  let users = useSelector((state:any)=>state.user.value)
   const router = useRouter()
   let dispatch = useDispatch(user)
   let [userDetails, setUserDetails]= useState({})
@@ -39,6 +39,7 @@ export default function Home() {
         }else if(!response.data.isBanned){
         if(response.data.auth){
           dispatch(user(response.data))
+          console.log(response.data)
           setUserDetails({name:`${response.data.firstname} ${response.data.lastname}`,recentjob:response.data.recentjob})
           
         }else{
@@ -86,7 +87,7 @@ export default function Home() {
       <main className="bg-black min-h-screen flex max-w-[1500px] mx-auto">
         {/* sidebar */}
         <ToastContainer />
-        <Sidebar userDetails ={userDetails}/>
+        <Sidebar userDetails ={users}/>
         {/* feed */}
         <Feed />
 

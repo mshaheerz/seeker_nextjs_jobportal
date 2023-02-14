@@ -95,3 +95,32 @@ export async function getAppliedJobs(formData:any) {
 
     }
 }
+
+
+export async function approveUser(formData:any,id:any,header:any) {
+    try {
+        const {data} = await axios.patch(`company/approve_user/${id}`,{approve:formData},{headers:header})
+        return data
+    } catch (error) {
+
+    }
+}
+
+
+export async function getApprovedJobs(formData:any) {
+    try {
+        const {data} = await axios.get(`company/get_approvedjobs`,{headers:formData})
+        return data
+    } catch (error) {
+
+    }
+}
+
+export async function EditJob(jobId:any,formData:any, header:any) {
+    try {
+        const {data} = await axios.put(`company/editjob/${jobId}`,formData,{headers:header})
+        return data
+    } catch (error) {
+        
+    }
+}

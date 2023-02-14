@@ -1,32 +1,31 @@
 import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal, useEffect, useState } from "react";
-import Feed from "../Feed/Feed";
-import Sidebar from "../Layouts/Sidebar";
+
 import HeartIcon from "@heroicons/react/24/outline/HeartIcon";
-import { getAllJobs,ApplyJob, getUserApplydJob } from "@/config/endpoints";
+import { getAllCompanies,ApplyJob, getUserApplydJob } from "@/config/endpoints";
 import { useRouter } from "next/router";      
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
 import JobContainer from "@/components/Company/JobContainer";
-
-function Jobs() {
+import CompanyContainer from "@/components/User/CompanyContainer";
+function ConmpaniesComponent() {
   const router = useRouter();
   const [refresh , setRefresh]= useState(false)
-  const [jobs, setJobs] = useState([])
+  const [company, setCompany] = useState([])
   useEffect(() =>{
     async function invoke(){
 
      
-      const data = await getAllJobs({'usertoken':localStorage.getItem('usertoken')})
-      if(data?.jobs){
+      const data = await getAllCompanies({'usertoken':localStorage.getItem('usertoken')})
+      if(data?.company){
       
-        setJobs(data.jobs)
+        setCompany(data.company)
       }
      
       
     }
     invoke();
   },[refresh])
-
+console.log(company)
 
 
   return (
@@ -34,9 +33,9 @@ function Jobs() {
       <ToastContainer />
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-2 p-5 cursor-pointer">
       
-      {jobs &&
+      {company &&
         
-          jobs.map((job)=>(<JobContainer job={job} applied={false} refresh={refresh} setRefresh={setRefresh} />)
+          company.map((company)=>(<CompanyContainer company={company} refresh={refresh} setRefresh={setRefresh} />)
           
 
    
@@ -54,4 +53,4 @@ function Jobs() {
   );
 }
 
-export default Jobs;
+export default ConmpaniesComponent;

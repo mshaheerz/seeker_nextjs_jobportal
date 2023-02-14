@@ -1,7 +1,7 @@
 import express from "express";
 const router = express.Router()
 import {verifyJWT} from '../middlewares/auth.js'
-import {getProfilePosts,applyJob,getOnePostNoAuth,addcomment,getOneposts,addLikes,deleteLikes,fetchLikes,fetchComments, deletePost,userPostUpdate,getposts,userPost,signup,signin ,validateSignup,isUserAuth, getAllposts} from "../controller/userController.js";
+import {getCompanyWiseJobs,getOneCompanyNoAuth,getAllcompanies,getAppliedJob,getOneAppliedJob,getProfilePosts,applyJob,getOnePostNoAuth,addcomment,getOneposts,addLikes,deleteLikes,fetchLikes,fetchComments, deletePost,userPostUpdate,getposts,userPost,signup,signin ,validateSignup,isUserAuth, getAllposts, editUser} from "../controller/userController.js";
 
 
 router.post('/signup',signup)
@@ -22,8 +22,14 @@ router.post('/send_post',verifyJWT,addcomment)
 router.post('/getOnepostNoAuth',getOneposts)
 router.get('/get_allposts',verifyJWT,getAllposts)
 router.get('/get_onejobNoAuth/:jobId',getOnePostNoAuth)
+router.get('/get_onecompanyNoAuth/:companyId',getOneCompanyNoAuth)
 router.post('/ApplyJob',verifyJWT,applyJob)
 router.get('/get_profile_posts',verifyJWT,getProfilePosts)
+router.put('/profile_edit',verifyJWT,editUser)
+router.get('/get_oneapplied_job/:jobId',verifyJWT,getOneAppliedJob)
+router.get('/get_applied_job',verifyJWT,getAppliedJob)
+router.get('/get_allcompanies',verifyJWT,getAllcompanies)
+router.get('/get_companywise_job/:companyId',verifyJWT,getCompanyWiseJobs)
 
 
 export default router

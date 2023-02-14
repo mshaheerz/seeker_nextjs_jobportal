@@ -3,6 +3,7 @@ import {XCircleIcon,PhotoIcon, ChartBarIcon,VideoCameraIcon, FaceSmileIcon } fro
 import Picker from "@emoji-mart/react"
 import { Data } from "emoji-mart"
 import { fabClasses } from "@mui/material"
+import { useDispatch, useSelector } from "react-redux";
 import VideoLibraryIcon from '@mui/icons-material/VideoLibrary';
 import { db,storage } from "@/firebase/firebase"
 import {addDoc,collection,doc,serverTimestamp,updateDoc} from "@firebase/firestore"
@@ -20,6 +21,7 @@ function Input() {
     const [loading, setLoading] = useState(false)
     const {setPostRefresh,postRefresh}:any = useContext(AppContext)
     const filePickerRef = useRef<HTMLInputElement>(0)
+    const users = useSelector((state:any)=>state.user.value)
     const router = useRouter()
 
     const sendPost= async ()=>{
@@ -122,6 +124,23 @@ function Input() {
 
     const addImageToPost=(e:any)=>{
         try {
+              
+            let filePath = e.target.files[0]?.name;
+            // Allowing file type
+            let allowedExtensions =/(\.jpg|\.jpeg|\.png|\.gif)$/i;
+            if (!allowedExtensions.exec(filePath)) {
+              toast.error(`OOPS! invalid file type`, {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+                });
+                return false;
+            }
         const reader = new FileReader();
         if(e.target.files[0]){
             reader.readAsDataURL(e.target.files[0])
@@ -137,7 +156,7 @@ function Input() {
   return (
     <div className={`border-b border-gray-700 p-3 flex space-x-3 overflow-y-scroll overflow-hidden no-scrollbar ${loading && "opacity-60"}`}>
         <ToastContainer />
-        <img src="https://lh3.googleusercontent.com/ogw/AAEL6sgG2UNiqo6FhnY0vomhQbCo9WLthbflYev4z7iaBg=s32-c-mo" alt="loading" 
+        <img src={users?.image} alt="loading" 
         className="h-11 w-11 rounded-full cursor-pointer" />
         <div className="w-full divide-y divide-gray-700">
             <div className={`${selectedFile && "pb-7"} ${input && "space-y-2.5"}`}>

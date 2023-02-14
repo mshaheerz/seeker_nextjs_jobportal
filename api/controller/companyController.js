@@ -176,11 +176,61 @@ export async function Companysignup(req,res){
   export async function getAppliedJobs(req,res){
     try {
       const companyId = req.companyId
-      const jobs = await jobapplymodel.find({company:companyId}).populate('user')
+      const jobs = await jobapplymodel.find({company:companyId,status:'pending'}).populate('user')
       res.json({"status":"success","message":"data fetched successfully",jobs})
     } catch (error) {
       
     }
   }
 
-  
+  export async function  companyapprovedJob(req,res){
+    try {
+      console.log(req.body)
+      const {approve} = req.body
+
+      const id = req.params.id
+      console.log(id)
+      if(approve){
+         await jobapplymodel.findByIdAndUpdate(id,{status:'approved'})
+      }
+      
+      res.json({"status":"success","message":"status updated success",id,approve})
+    } catch (error) {
+      
+      res.json({"status":"failed", "message":error.message})
+
+    }
+  }
+
+
+  export async function getApprovedJobs(req,res){
+    try {
+      const companyId = req.companyId
+      const jobs = await jobapplymodel.find({company:companyId,status:'approved'}).populate('user')
+      res.json({"status":"success","message":"data fetched successfully",jobs})
+    } catch (error) {
+      
+    }
+  }
+
+  export async function editJob(req,res){
+    try {
+      const obj = req.body
+      
+      const jobId = req.params.jobId
+      const companyId = req.companyId
+      console.log(jobId)
+      if(obj.jobtitle && obj.address && obj.city && obj.state && obj.hirecount && obj.jobdescription){
+        await jobmodel.findByIdAndUpdate(jobId,{
+          company:companyId,
+          ...obj,
+        })
+       
+        res.json({ "status": "success", "message": 'Job posted successfully' })
+      }else{
+         res.json({ "status": "failed", "message": 'Please fill required field' })
+      }
+    } catch (error) {
+      res.json({ "status": "failed", "message": error.message })
+    }
+  }

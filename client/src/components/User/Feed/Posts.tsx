@@ -110,11 +110,11 @@ function Posts({post, postPage}:any) {
     }}>
 
     {!postPage && (
-        <img src={post?.image} alt="loading" className="h-11 w-11 rounded-full mr-4" />)}
+        <img src={post?.user?.image} alt="loading" className="h-11 w-11 rounded-full mr-4" />)}
         <div className="flex flex-col space-y-2 w-full">
         <div className={`flex ${!postPage && "justify-between"}`}>
             {postPage && (
-            <img src={post?.image} alt="profie" className="h-11 w-11 rounded-full mr-4" />
+            <img src={post?.user?.image} alt="profie" className="h-11 w-11 rounded-full mr-4" />
             )}
 
             <div className="text-[#6e767d]">
@@ -140,7 +140,11 @@ function Posts({post, postPage}:any) {
                 {post?.text}
             </p>
         )}
+        {
+      post?.image &&
+     
         <img src={post?.image} alt="somthing" className='round-2xl max-h-[700px] object-cover mr-2' />
+      }
         <div className={`text-[#6e767d] flex justify-between w-10/12 ${postPage && "mx-auto"}`}>
             {/* newwwwwwwwwwwwww */}
             <div

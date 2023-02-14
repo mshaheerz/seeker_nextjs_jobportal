@@ -18,7 +18,7 @@ import {
   SelectChangeEvent,
   FormControl,
 } from "@mui/material";
-import React, { useState,useContext } from "react";
+import React, { useState,useContext, useEffect } from "react";
 import MenuBook from "@mui/icons-material/MenuBook";
 import { AppContext } from "@/context/AppContext";
 import axios from "@/config/axios";
@@ -65,9 +65,40 @@ function Copyright(props: any) {
 
 function SkillsSetup() {
   const {userDetails, setUserDetails}:any = useContext(AppContext)
+  const [otp, setOtp] = useState("");
+  const [minutes, setMinutes] = useState(1);
+  const [seconds, setSeconds] = useState(30);
   const router = useRouter()
   //states */
 
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (seconds > 0) {
+        setSeconds(seconds - 1);
+      }
+  
+      if (seconds === 0) {
+        if (minutes === 0) {
+          clearInterval(interval);
+        } else {
+          setSeconds(59);
+          setMinutes(minutes - 1);
+        }
+      }
+    }, 1000);
+  
+    return () => {
+      clearInterval(interval);
+    };
+  }, [seconds]);
+
+  function setupRecaptcha(number:any){
+    const recaptchaVerifier = new RecaptchaVerifier('recaptcha-containerrediv', {}, auth)
+    recaptchaVerifier.render()
+    return signInWithPhoneNumber(auth,number,recaptchaVerifier)
+  }
+  
   const handleSubmits = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -159,6 +190,7 @@ function SkillsSetup() {
     <ThemeProvider theme={darkTheme}>
       <ToastContainer />
       <Container component="main" maxWidth="sm">
+
         <CssBaseline />
         <Box
           sx={{
@@ -200,7 +232,7 @@ function SkillsSetup() {
                     // helperText={emailerr}
                   />
                 </Grid>
-                <div id='recaptcha-container' />
+                <div id='recaptcha-containerrediv' />
 
             
               </Grid>
@@ -215,6 +247,51 @@ function SkillsSetup() {
               >
                 Verify
               </Button>
+              <div className="countdown-text flex">
+                {seconds > 0 || minutes > 0 ? (
+                  <p>
+                    Time Remaining: {minutes < 10 ? `0${minutes}` : minutes}:
+                    {seconds < 10 ? `0${seconds}` : seconds}
+                  </p>
+                ) : (
+                  <p>Didn't recieve code?</p>
+                )}
+              <div className="ml-auto">
+                <button
+                  
+                  disabled={seconds > 0 || minutes > 0}
+                  style={{
+                    color: seconds > 0 || minutes > 0 ? "#DFE3E8" : "#FF5630",
+                    display: seconds > 0 || minutes > 0 ? "none" : "block"
+                  }}
+                  onClick={async ()=>{
+                    try{
+             
+                    let numbers = String(userDetails?.phone)
+                    const response:any = await setupRecaptcha(`+91${numbers}`);
+                    userDetails.otpverify=response;
+                    setMinutes(1);
+                    setSeconds(30);
+                    }catch(error){
+                      toast.error(`${error.message}`, {
+                        position: "top-right",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "dark",
+                        });
+                    }
+                
+                
+                  }}
+                >
+                  Resend OTP
+                </button>
+                </div>
+              </div>
               <Grid container justifyContent="flex-end"></Grid>
             </FormControl>
           </Box>

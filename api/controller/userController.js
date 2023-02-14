@@ -6,6 +6,7 @@ import commentmodel from "../model/commentSchema.js";
 import likemodel from "../model/likeSchema.js";
 import jobmodel from "../model/jobSchema.js";
 import jobapplymodel from "../model/jobapplySchema.js";
+import companymodel from "../model/company/companySchema.js";
 
 export async function validateSignup(req,res){
     try {
@@ -224,7 +225,8 @@ export async function isUserAuth (req, res) {
       "school":userDetails.school,
       "recentcompany":userDetails.recentcompany,
       "auth":true,
-      "image":userDetails.image||null
+      "image":userDetails.image||null,
+      "cover":userDetails.cover||null
   })
   
   } catch (error) {
@@ -405,6 +407,8 @@ export async function getOnePostNoAuth(req,res){
 }
 
 
+
+
 export async function applyJob(req,res){
   try {
     const userId = req.userId
@@ -433,6 +437,172 @@ export async function getProfilePosts(req,res){
   
     
     res.json({"status":"success","posts":posts})
+  } catch (error) {
+ 
+    res.json({"status":"failed", "message":error.message})
+  }
+}
+
+
+
+export async function editUser(req,res){
+  try {
+    let obj = req.body
+    let regName =/^[a-zA-Z]+$/;
+    let regEmail =/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
+    let mob=/^([+]\d{2})?\d{10}$/
+    const currentUser= await usermodel.findById(req.userId)
+    if(obj.firstname && obj.lastname && obj.email){
+        if (regName.test(obj.firstname.toString())) {
+            if (regName.test(obj.lastname.toString())) {
+              if (regEmail.test(obj.email.toString())) {
+
+             
+                    if(currentUser.email === obj.email){
+                      if(obj.image){
+                        await usermodel.findByIdAndUpdate(req.userId,{image:obj.image})
+                      }
+                      if(obj.cover){
+                        await usermodel.findByIdAndUpdate(req.userId,{cover:obj.cover})
+                      }
+                      if(obj.resume){
+                        await usermodel.findByIdAndUpdate(req.userId,{resume:obj.resume})
+                      }
+                      
+                      await usermodel.findByIdAndUpdate(req.userId,{  
+                        firstname:obj.firstname,
+                        lastname:obj.lastname,
+                        recentcompany:obj.recentcompany,
+                        recentjob:obj.recentjob,
+                        school:obj.school,
+                        state:obj.state,
+                        zip:obj.zip,
+                        city:obj.city,
+                         })
+                         const userDetails = await usermodel.findById(req.userId)
+                         res.json({ "status": "success", "message": "updated without email","user":userDetails })
+
+                    }else{
+                      const  user= await usermodel.findOne({email:obj.email})
+                      if(!user){
+                          if(obj.image){
+                            await usermodel.findByIdAndUpdate(req.userId,{image:obj.image})
+                          }
+                          if(obj.cover){
+                            await usermodel.findByIdAndUpdate(req.userId,{cover:obj.cover})
+                          }
+                          if(obj.resume){
+                            await usermodel.findByIdAndUpdate(req.userId,{resume:obj.cover})
+                          }
+                          
+                          await usermodel.findByIdAndUpdate(req.userId,{  
+                            firstname:obj.firstname,
+                            lastname:obj.lastname,
+                            email:obj.email,
+                            recentcompany:obj.recentcompany,
+                            recentjob:obj.recentjob,
+                            school:obj.school,
+                            state:obj.state,
+                            zip:obj.zip,
+                            city:obj.city,
+                             })
+
+                             const userDetails = await usermodel.findById(req.userId)
+                            
+                             res.json({ "status": "success", "message": "updated with email","user":userDetails})
+
+
+                      }else{
+                        res.json({ "status": "failed", "message": "This email is already registered" })
+
+                      }
+                    }
+              } else {
+                res.json({ "status": "failed", "message": "Enter valid Email" })
+              }
+            } else {
+                res.json({ "status": "failed", "message": "Enter valid lastname" })
+            }
+          } else {
+            res.json({ "status": "failed", "message": "Enter valid firstname" })
+        }
+    }else{
+        // res.json({"auth":true,"token":token,"result":admindetails, "status": "success", "message": "signin success" })
+        res.json({ "status": "failed", "message": "All fields are required" })
+    }
+    
+   
+} catch (error) {
+  res.json({ "status": "failed", "message": error.message })
+}
+   
+}
+
+
+export async function getOneAppliedJob(req,res){
+  try {
+    const jobId = req.params.jobId;
+    let jobs = await jobapplymodel.findOne({user:req.userId,job:jobId}).populate("user").sort({updatedAt:-1})
+  
+    if(jobs){
+      res.json({"status":"success","jobs":jobs})
+    }else{
+      res.json({"status":"failed","message":'not applied'})
+    }
+    
+  } catch (error) {
+ 
+    res.json({"status":"failed", "message":error.message})
+  }
+}
+
+
+export async function getAppliedJob(req,res){
+  try {
+    
+    let jobs = await jobapplymodel.find({user:req.userId}).populate('job').sort({updatedAt:-1})
+  
+    if(jobs){
+      res.json({"status":"success","jobs":jobs})
+    }else{
+      res.json({"status":"failed","message":'not applied'})
+    }
+    
+  } catch (error) {
+ 
+    res.json({"status":"failed", "message":error.message})
+  }
+}
+
+
+export async function getAllcompanies(req,res){
+  try {
+    
+    const company = await companymodel.find({})
+    res.json({"status":"success",company:company})
+  } catch (error) {
+    res.json({"status":"failed", "message":error.message})
+  }
+}
+
+export async function getOneCompanyNoAuth(req,res){
+  try {
+    const companyId = req.params.companyId
+    const company = await companymodel.findById(companyId)
+    res.json({"status":"success",company:company})
+  } catch (error) {
+    res.json({"status":"failed", "message":error.message})
+  }
+}
+
+
+export async function getCompanyWiseJobs(req,res){
+  try {
+    const companyId = req.params.companyId;
+    let jobs = await jobmodel.find({company:companyId,approved:true}).sort({updatedAt:-1})
+  
+    
+    res.json({"status":"success","jobs":jobs})
   } catch (error) {
  
     res.json({"status":"failed", "message":error.message})
