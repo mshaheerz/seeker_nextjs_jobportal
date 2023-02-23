@@ -4,6 +4,7 @@ import postReducer from "@/redux/setpostid"
 import isopenReducer from "@/redux/setisopen"
 import refreshcomment from './refreshcomment'
 import companyinfo from './companyinfo'
+import jobs from './jobs'
 import {applyMiddleware, configureStore} from '@reduxjs/toolkit'
 import thunk from 'redux-thunk'
 // ...
@@ -14,7 +15,8 @@ export const store = configureStore({
     setpostid:postReducer,
     setisopen:isopenReducer,
     refreshcomment:refreshcomment,
-    companyinfo:companyinfo
+    companyinfo:companyinfo,
+    jobs:jobs,
 
   
   }

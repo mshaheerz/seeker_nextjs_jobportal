@@ -16,6 +16,8 @@ const companySchema = new mongoose.Schema({
   description:String,
   employeeCount:Number,
   hiringManager:String,
+  image:String,
+  cover:String,
   phone:{
     type: String,
   },

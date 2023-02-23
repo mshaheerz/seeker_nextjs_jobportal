@@ -165,7 +165,7 @@ export async function Companysignup(req,res){
 
   export async function getCompanyJobs(req,res){
     try {
-      const data = await jobmodel.find({company:req.companyId})
+      const data = await jobmodel.find({company:req.companyId}).sort({updatedAt:-1})
       res.json(data)
     } catch (error) {
       
@@ -176,7 +176,7 @@ export async function Companysignup(req,res){
   export async function getAppliedJobs(req,res){
     try {
       const companyId = req.companyId
-      const jobs = await jobapplymodel.find({company:companyId,status:'pending'}).populate('user')
+      const jobs = await jobapplymodel.find({company:companyId,status:'pending'}).populate('user').sort({updatedAt:-1})
       res.json({"status":"success","message":"data fetched successfully",jobs})
     } catch (error) {
       
@@ -206,7 +206,7 @@ export async function Companysignup(req,res){
   export async function getApprovedJobs(req,res){
     try {
       const companyId = req.companyId
-      const jobs = await jobapplymodel.find({company:companyId,status:'approved'}).populate('user')
+      const jobs = await jobapplymodel.find({company:companyId,status:'approved'}).populate('user').sort({updatedAt:-1})
       res.json({"status":"success","message":"data fetched successfully",jobs})
     } catch (error) {
       
@@ -233,4 +233,116 @@ export async function Companysignup(req,res){
     } catch (error) {
       res.json({ "status": "failed", "message": error.message })
     }
+  }
+
+
+  export async function  JobInactiveAndActive(req,res){
+    try {
+
+      const jobId =req.params.jobId
+      const {status} = req.body
+       console.log(status)
+      if(status == 'true'){
+        console.log('jeeeeee')
+         await jobmodel.findByIdAndUpdate(jobId,{active:true})
+         res.json({"status":"success","message":"status updated success",jobId,statuses:status})
+
+      }else{
+        console.log('eee')
+        console.log(status)
+        await jobmodel.findByIdAndUpdate(jobId,{active:false})
+        res.json({"status":"success","message":"status updated success",jobId,statuses:status})
+
+
+      }
+      
+    } catch (error) {
+      
+      res.json({"status":"failed", "message":error.message})
+
+    }
+  }
+
+  export async function editCompanyProfile(req,res){
+    try {
+      let obj = req.body
+      console.log(obj)
+      let regName =/^[a-zA-Z]+$/;
+      let regEmail =/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
+      const currentCompany= await companymodel.findById(req.companyId)
+      if(obj.fullname && obj.company && obj.email){
+          if (regName.test(obj.company.toString())) {
+              if (regName.test(obj.fullname.toString())) {
+                if (regEmail.test(obj.email.toString())) {
+  
+               
+                      if(currentCompany.email === obj.email){
+                        if(obj.image){
+                          await companymodel.findByIdAndUpdate(req.companyId,{image:obj.image})
+                        }
+                        if(obj.cover){
+                          await companymodel.findByIdAndUpdate(req.companyId,{cover:obj.cover})
+                        }
+                      
+                        
+                        await companymodel.findByIdAndUpdate(req.companyId,{  
+                          fullname:obj.fullname,
+                          company:obj.company,
+                          employeeCount:obj.employeeCount,
+                          industry:obj.industry,
+                          description:obj.description,
+                           })
+                           const companyDetails = await companymodel.findById(req.companyId)
+                           res.json({ "status": "success", "message": "updated without email","company":companyDetails })
+  
+                      }else{
+                        const  company= await companymodel.findOne({email:obj.email})
+                        if(!company){
+                            if(obj.image){
+                              await companymodel.findByIdAndUpdate(req.companyId,{image:obj.image})
+                            }
+                            if(obj.cover){
+                              await companymodel.findByIdAndUpdate(req.companyId,{cover:obj.cover})
+                            }
+                          
+                            
+                            await companymodel.findByIdAndUpdate(req.userId,{  
+                        
+                              email:obj.email,
+                              fullname:obj.fullname,
+                              company:obj.company,
+                              employeeCount:obj.employeeCount,
+                              industry:obj.industry,
+                              description:obj.description,
+                               })
+  
+                               const companyDetails = await companymodel.findById(req.companyId)
+                              
+                               res.json({ "status": "success", "message": "updated with email","company":companyDetails})
+  
+  
+                        }else{
+                          res.json({ "status": "failed", "message": "This email is already registered" })
+  
+                        }
+                      }
+                } else {
+                  res.json({ "status": "failed", "message": "Enter valid Email" })
+                }
+              } else {
+                  res.json({ "status": "failed", "message": "Enter valid lastname" })
+              }
+            } else {
+              res.json({ "status": "failed", "message": "Enter valid firstname" })
+          }
+      }else{
+          // res.json({"auth":true,"token":token,"result":admindetails, "status": "success", "message": "signin success" })
+          res.json({ "status": "failed", "message": "All fields are required" })
+      }
+      
+     
+  } catch (error) {
+    res.json({ "status": "failed", "message": error.message })
+  }
+     
   }

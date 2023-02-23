@@ -186,3 +186,156 @@ export async function CompanyWiseJobFetch(formData:any,header:any){
         
     }
 }
+
+export async function SearchJob(formData:any,header:any){
+    try {
+        const {data} = await axios.get(`/search_job?search=${formData}`,{headers:header})
+        return data;
+    } catch (error) {
+        
+    }
+}
+
+export async function FilterByJobType(formData:any,header:any){
+    try {
+        const {data} = await axios.get(`/filter_by_jobtype?search=${formData}`,{headers:header})
+        return data;
+    } catch (error) {
+        
+    }
+}
+
+export async function ActiveandInactiveJob(jobId:any,formData:any,header:any){
+    try {
+        const {data} = await axios.patch(`/company/active_inactive_job/${jobId}`,formData,{headers:header})
+        return data;
+    } catch (error) {
+        
+    }
+}
+
+export async function SearchUser(formData:any,header:any){
+    try {
+        const {data} = await axios.get(`/search_user?search=${formData}`,{headers:header})
+        return data;
+    } catch (error) {
+        
+    }
+}
+
+
+export async function getOneUserNoAuth(formData:any){
+    try {
+        const {data} = await axios.get(`/get_oneuser/${formData}`)
+        return data;
+    } catch (error) {
+        
+    }
+}
+
+
+export async function getUserPosts(formData:any,header:any){
+    try {
+        const {data} = await axios.get(`/get_user_posts/${formData}`,{headers:header})
+        return data;   
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export async function flagPost(formData:any,header:any){
+    try {
+        const {data} = await axios.patch(`/flagpost`,formData,{headers:header})
+        return data;   
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+
+export async function UserChats(formData:any){
+    try {
+
+        const {data} = await axios.get(`/chat/${formData}`)
+        return data;   
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+
+export async function createChat(formData:any){
+    try {
+
+        const {data} = await axios.post(`/chat`,formData)
+        return data;   
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export async function GetChatUsers(formData:any){
+    try {
+        const {data} = await axios.get(`/chat/getchatusers/${formData}`)
+        return data;
+    } catch (error) {
+        
+    }
+}
+
+export async function getMessages(formData:any){
+    try {
+        const {data} = await axios.get(`/message/${formData}`)
+        return data;
+    } catch (error) {
+        
+    }
+}
+
+export async function addMessages(formData:any){
+    try {
+        const {data} = await axios.post(`/message/`,formData)
+        return data;
+    } catch (error) {
+        
+    }
+}
+
+
+export async function getAllCompanyDetails(formData:any){
+    try {
+        const {data} = await axios.get(`/admin/getallcompanydetails`,{headers:formData})
+        return data;
+    } catch (error) {
+        
+    }
+}
+
+
+export async function getAllJobDetails(formData:any){
+    try {
+        const {data} = await axios.get(`/admin/getalljobdetails`,{headers:formData})
+        return data;
+    } catch (error) {
+        
+    }
+}
+
+export async function Notify(formData:any){
+    try {
+        const {data} = await axios.post(`/notification`,formData)
+        return data;
+    } catch (error) {
+        
+    }
+}
+
+
+export async function getNotification(formdata:any,header:any){
+    try {
+        const {data} = await axios.get(`/GetCompanynotification/${formdata}`,{headers:header})
+        return data;
+    } catch (error) {
+        
+    }
+}

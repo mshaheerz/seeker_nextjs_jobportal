@@ -11,6 +11,13 @@ const postSchema = new mongoose.Schema({
     image:{type: String,},
     text:{type: String},
     video:String,
+    reports:[{
+      userId:{
+        type:mongoose.Types.ObjectId,
+        ref:'user',
+      },
+      report:String
+    }],
 
     
   isBanned:{type:Boolean, default:false},

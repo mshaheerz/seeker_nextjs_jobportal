@@ -12,7 +12,7 @@ import { Logout } from "@mui/icons-material";
 import swal from "sweetalert";
 import BottomNavigationBar from "@/components/Company/Layouts/BottomNavigationBar";
 import Widgets from "@/components/User/Feed/Widgets";
-
+import JobSearchComponent from "@/components/User/Jobs/JobSearchComponent";
 
 function JobsPage() {
   let dispatch = useDispatch(user);
@@ -84,9 +84,11 @@ function JobsPage() {
             </div>
 
           </div>
-          //jobs component
+          <JobSearchComponent />
+       
+          <div className="pb-72">
           <Jobs applied={false}/>
-          <div className="pb-72"></div>
+          </div>
         </div>
 
         {/* feed */}

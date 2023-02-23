@@ -5,24 +5,31 @@ import {
 } from "@heroicons/react/24/solid";
 import { useEffect, useState } from "react";
 import { getCompanyJobs } from "@/config/companyendpoints";
+import { ActiveandInactiveJob } from "@/config/endpoints";
+
 
 function ShowJob() {
   const router = useRouter();
-  
+
   const [jobs, setJobs] = useState([]);
+  const [jobActive,setJobActive] = useState('');
+  const [refresh,setRefresh] = useState(false);
   useEffect(() => {
     async function invoke() {
       const data = await getCompanyJobs({
         companytoken: localStorage.getItem("companytoken"),
       });
       if (data) {
+      
         setJobs(data);
-        
+        console.log(data)
       }
      
     }
     invoke();
-  }, []);
+  }, [refresh]);
+
+  
   return (
     <div>
       <div className="flex pl-4 mt-5">
@@ -76,8 +83,8 @@ function ShowJob() {
       </div>
       {jobs?.length >0 &&
         jobs.map((job) => (
-          <div className="ml-4 mr-4 mt-4">
-            <div className="w-full p-4 text-center bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700">
+          <div key={job._id} className="ml-4 mr-4 mt-4">
+            <div className="w-full p-4 text-center  border border-gray-200 rounded-lg shadow sm:p-8 bg-gray-900 dark:border-gray-700">
               <div className="flex justify-between space-y-4 sm:flex sm:space-y-0 sm:space-x-4 text-white">
                 <div className="max-w-sm">
                   <h4 className="">{job?.jobtitle}</h4>
@@ -86,9 +93,20 @@ function ShowJob() {
                   </p>
                 </div>
                 <div>
-                <select className="bg-white text-black px-4">
-                    <option value="">Active</option>
-                    <option value="">Inactive</option>
+                <select 
+                defaultValue={job?.active?'true':'false'}
+                
+                onChange={async (e)=>{
+                 
+                  const val = e.target.value;
+                  const data = await ActiveandInactiveJob(job?._id,{status:val},{'companytoken':localStorage.getItem('companytoken')})
+                  
+                  setRefresh(!refresh)
+                  
+                }}
+                className="bg-gray-500 rounded  text-white px-4">
+                    <option value="false">Inactive</option>
+                    <option value="true">Active</option>
                   </select>
                 </div>
                 <div>

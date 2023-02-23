@@ -26,8 +26,13 @@ function SidebarAdmin() {
      <Link href='/admin/users'>
      <SidebarLinkCompany text='Users' Icon={AccountCircle} active={false} />
      </Link>
+     <Link href='/admin/companylist'>
       <SidebarLinkCompany text='Company' Icon={Business} active={false}/>
+      </Link>
+
+      <Link href='/admin/joblist'>
       <SidebarLinkCompany text='Jobs' Icon={BriefcaseIcon} active={false} />
+      </Link>
       <SidebarLinkCompany text='reports/flag' Icon={Report} active={false} />
       
     </div>

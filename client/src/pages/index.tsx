@@ -5,7 +5,7 @@ import Feed from '@/components/User/Feed/Feed'
 import Sidebar from '@/components/User/Layouts/Sidebar'
 import useSWR from 'swr'
 import axios from '@/config/axios'
-import {useEffect, useState} from 'react'
+import {useEffect, useRef, useState} from 'react'
 import { useRouter } from 'next/router'
 import { useDispatch, useSelector } from 'react-redux'
 import { user } from '@/redux/signupdetails'
@@ -14,7 +14,7 @@ import Widgets from '@/components/User/Feed/Widgets'
 import BottomNavigationBar from '@/components/Company/Layouts/BottomNavigationBar'
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
-
+import { io } from "socket.io-client";
 // const fetcher = async ()=>{
 //   const response = await fetch('http://localhost:3000/api/hello')
 //   const data = await response.json()
@@ -28,7 +28,11 @@ export default function Home() {
   const router = useRouter()
   let dispatch = useDispatch(user)
   let [userDetails, setUserDetails]= useState({})
+//  const socket: any = useRef();
+
  
+  const [onlineUsers, setOnlineUsers] = useState([]);
+
   useEffect(() => {
    if(localStorage.getItem('usertoken')){
       axios.get('/isUserAuth',{
@@ -58,6 +62,21 @@ export default function Home() {
    }
   
   }, [])
+
+
+  // useEffect(() => {
+  //   if(socket.current ==null){
+  //     socket.current = io("ws://localhost:8800");
+  //     socket.current.emit("new-user-add", users?.userId);
+  //   }
+  
+  //     socket.current.on("get-users", (userss:any) => {
+  //       setOnlineUsers(userss);
+  //       console.log('online users',onlineUsers);
+  //     }); 
+  
+  //   }, [users]);
+   
 
  
   

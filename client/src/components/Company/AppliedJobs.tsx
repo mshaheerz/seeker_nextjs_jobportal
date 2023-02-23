@@ -12,10 +12,12 @@ import {
   TextField,
   Box,
   ThemeProvider,
+  Toolbar,
 } from "@mui/material";
 import SearchBar from "@mkyy/mui-search-bar";
 import UserApprovalAction from "./UserApprovalAction"
 import { color } from "@mui/system";
+import { GridToolbar } from "@mui/x-data-grid";
 import { DataGrid } from "@mui/x-data-grid";
 import { createTheme } from "@mui/material/styles";
 import { green } from "@mui/material/colors";
@@ -162,6 +164,7 @@ function AppliedJobs() {
             border: 1,
           }}
           columns={columns}
+          components={{Toolbar: GridToolbar}}
           rows={jobs}
           getRowId={(row) => row?._id}
           getRowSpacing={(params) => ({

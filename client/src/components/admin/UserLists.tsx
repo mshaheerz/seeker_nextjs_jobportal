@@ -35,14 +35,14 @@ function UserListsComponent() {
         invoke();
     },[])
     const columns = useMemo(()=>[
-        {field:'image',headerName:'Avatar',width:60},
+        {field:'image',headerName:'Avatar',width:60, renderCell:(params:any) => (<div><img src={params?.row?.image} alt="" /></div>)},
         {field:'firstname',headerName:'Firstname',width:170},
         {field:'lastname',headerName:'Lastname',width:170},
         {field:'email',headerName:'Email',width:200},
         {field:'phone',headerName:'Phone',width:200},
         {field:'isBanned',headerName:'Banned',width:100, type:'boolean', editable:true},
         {field:'actions',headerName:'Action',width:200, type:'action',
-        renderCell:(params) => (<UserActions {...{params,rowId, setRowId}} />) },
+        renderCell:(params:any) => (<UserActions {...{params,rowId, setRowId}} />) },
       
 
         
@@ -82,7 +82,7 @@ function UserListsComponent() {
 
 
       })}
-      onCellEditCommit={params=>setRowId(params.id)}
+      onCellEditCommit={(params:any)=>setRowId(params.id)}
         />
    </Box>
    </ThemeProvider>

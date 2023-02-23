@@ -21,6 +21,7 @@ const jobSchema = new mongoose.Schema({
     zip:Number,
     approved:{type:Boolean, default:false},
     isBanned:{type:Boolean, default:false},
+    active:{type:Boolean, default:true}
   
  
 },

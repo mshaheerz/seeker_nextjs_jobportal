@@ -19,6 +19,7 @@ import { color } from "@mui/system";
 import { DataGrid } from "@mui/x-data-grid";
 import { createTheme } from "@mui/material/styles";
 import { green } from "@mui/material/colors";
+
 import {
   getAllUserDetails,
   getNotApprovedJobs,
@@ -27,6 +28,10 @@ import {
 } from "@/config/companyendpoints";
 
 import JobAction from "../admin/JobAction";
+import { Message } from "@mui/icons-material";
+import { useSelector } from "react-redux";
+import { createChat } from "@/config/endpoints";
+import { useRouter } from "next/router";
 const theme = createTheme({
   palette: {
     mode: "dark",
@@ -42,6 +47,9 @@ function ApprovedJobs() {
   const [jobs, setJobs] = useState([]);
   const [rowId, setRowId] = useState(null);
   const [refresh, setRefresh] = useState(false);
+  let companyDetails = useSelector((state:any)=>state.companyinfo.value)
+  const router = useRouter()
+
   useEffect(() => {
     async function invoke() {
       const data = await getApprovedJobs({
@@ -52,6 +60,11 @@ function ApprovedJobs() {
     }
     invoke();
   }, [refresh]);
+
+ 
+
+
+
   const columns = useMemo(
     () => [
       {
@@ -123,10 +136,18 @@ function ApprovedJobs() {
       },
       {
         field: "clear",
-        headerName: "clear",
+        headerName: "chat",
         width: 100,
         type: "boolean",
         editable: true,
+        renderCell: (params:any) => (
+          <div className="rowItem"><Message className="text-gray-500 cursor-pointer"onClick={async ()=>{
+            console.log( companyDetails?._id)
+            const data = await createChat({senderId:companyDetails._id,receiverId:params?.row?.user?._id})
+            console.log({senderId:companyDetails._id,receiverId:params?.row?.user?._id})
+            router.push('/company/message')
+          }} /></div>
+        ),
       },
       {
         field: "actions",
@@ -137,6 +158,7 @@ function ApprovedJobs() {
           <UserApprovalAction {...{ params, rowId, setRowId, refresh, setRefresh }} />
         ),
       },
+      
     ],
     [rowId]
   );

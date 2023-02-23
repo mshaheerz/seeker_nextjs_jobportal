@@ -3,12 +3,14 @@ import { useState, Fragment, useRef, use } from "react";
 import { ThemeProvider } from "@mui/material";
 import { Dialog, Transition } from "@headlessui/react";
 import { ChartBarIcon, PencilIcon, XMarkIcon } from "@heroicons/react/24/solid";
-import { editProfile } from "@/config/endpoints";
+import { createChat, editProfile } from "@/config/endpoints";
 import Loading from "@/pages/loading";
 import { user } from '@/redux/signupdetails'
 import { useDispatch } from "react-redux";
 import {ToastContainer,toast} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
+import { Message } from "@mui/icons-material";
+import { useRouter } from "next/router";
 
 // const darkTheme = createTheme({
 //   palette: {
@@ -29,8 +31,8 @@ import 'react-toastify/dist/ReactToastify.css';
 // });
 
 
-function UserProfile({ users }: any) {
-
+function UserProfile({ users,profile,currentUserId }: any) {
+ const router = useRouter()
   const dispatch = useDispatch(user);
   const [open, setOpen] = useState(false);
   const [loading,setLoading] = useState(false);
@@ -177,6 +179,12 @@ function UserProfile({ users }: any) {
     setLoading(false)
     
   }
+
+  const handleChat =async()=>{
+    console.log(currentUserId, users?._id)
+    const data = await createChat({senderId:currentUserId,receiverId:users?._id})
+    router.push('/chat')
+  }
   return (
     <>
     {
@@ -207,12 +215,15 @@ function UserProfile({ users }: any) {
             <p className="text-gray-500  text-center">{users?.recentjob}</p>
           </div>
           <div className="ml-auto mr-3">
-            <button
+            {
+              profile?(<Message className="text-white mr-4 cursor-pointer" onClick={handleChat} />):( <button
               className="border border-white rounded px-4 py-1 text-white font-semibold"
               onClick={openModal}
             >
               Edit profile
-            </button>
+            </button>)
+            }
+           
             
           </div>
         </div>

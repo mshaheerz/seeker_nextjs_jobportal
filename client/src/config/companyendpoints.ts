@@ -69,6 +69,26 @@ export async function flagUser(formData:any,id:any,header:any) {
     }
 }
 
+export async function flagCompany(formData:any,id:any,header:any) {
+    try {
+        const {data} = await axios.patch(`admin/flagcompany/${id}`,{isBanned:formData},{headers:header})
+        return data
+    } catch (error) {
+
+    }
+}
+
+export async function flagJob(formData:any,approved:any,id:any,header:any) {
+    try {
+        const {data} = await axios.patch(`admin/flagjob/${id}`,{isBanned:formData,approved:approved},{headers:header})
+        return data
+    } catch (error) {
+
+    }
+}
+
+
+
 export async function getNotApprovedJobs(header:any) {
     try {
         const {data}= await axios.get(`admin/get_notapproved_jobs`,{headers:header})
@@ -122,5 +142,15 @@ export async function EditJob(jobId:any,formData:any, header:any) {
         return data
     } catch (error) {
         
+    }
+}
+
+
+export async function editCompanyProfile(formData: any,header:any){
+    try {
+        const {data} = await axios.put('/company/Company_profile_edit',formData,{headers:header})
+        return data
+    } catch (error) {
+        alert('pee')
     }
 }

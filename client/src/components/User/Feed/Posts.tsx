@@ -13,13 +13,32 @@ import { db } from '@/firebase/firebase'
 import { deletePost, unLike, postLike } from '@/config/endpoints'
 import { AppContext } from '@/context/AppContext'
 import { fetchComments,fetchLikes} from '@/config/endpoints'
-import { fabClasses } from '@mui/material'   
+import { IconButton, fabClasses } from '@mui/material'   
 import {HandThumbUpIcon} from '@heroicons/react/24/solid'
 import axios from '@/config/axios'
 import { user } from '@/redux/signupdetails'
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 import swal from 'sweetalert'
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer,toast } from "react-toastify"
+import { flagPost } from '@/config/endpoints'
+const options = [
 
+  'spam',
+  'Hate speech or symbols',
+  'Bullying or harassment',
+  'Suicide or self-injury',
+  'Scams or fraud',
+  'False information'
+
+
+
+];
+
+const ITEM_HEIGHT = 48;
 import { TwitterShareButton,OKShareButton } from 'react-share';
+import { BorderAll, BorderLeft, Report } from '@mui/icons-material'
 function Posts({post, postPage}:any) {
    
     const router = useRouter()
@@ -34,6 +53,7 @@ function Posts({post, postPage}:any) {
     const [likes, setLikes]= useState(['1'])
     const {setPostRefresh,postRefresh}:any = useContext(AppContext)
     const [changes, setChanges]=useState(fabClasses)
+
 
     const refreshcomment = useSelector((state:any)=>state.refreshcomment.value)
       // setpostid(setpostid({name:'fd'}))
@@ -103,14 +123,34 @@ function Posts({post, postPage}:any) {
           console.log(data)
         }
       }
+
+      const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+      const open = Boolean(anchorEl);
+      const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+        event.stopPropagation();
+        console.log(event.currentTarget.dataset)
+        setAnchorEl(event.currentTarget);
+    
+      };
+      const handleClose = (event:any) => {
+        event.stopPropagation();
+        console.log(event.currentTarget.dataset)
+        console.log(event.target.value)
+        setAnchorEl(null);
+
+      };
   
   return (
     <div className="p-3 flex cursor-pointer border-b border-gray-700 " onClick={()=>{
         router.push(`/${post._id}`)
     }}>
+      <ToastContainer />
 
     {!postPage && (
-        <img src={post?.user?.image} alt="loading" className="h-11 w-11 rounded-full mr-4" />)}
+        <img src={post?.user?.image} onClick={(e:any)=>{
+          e.stopPropagation();
+          router.push(`/user/${post?.user?._id}`)
+        }} alt="loading" className="h-11 w-11 rounded-full mr-4" />)}
         <div className="flex flex-col space-y-2 w-full">
         <div className={`flex ${!postPage && "justify-between"}`}>
             {postPage && (
@@ -204,11 +244,75 @@ function Posts({post, postPage}:any) {
           ) : (
             <div className="flex items-center space-x-1 group">
               <div className="icon group-hover:bg-green-500/10">
-                <ArrowRightIcon className="h-5 group-hover:text-green-500" />
+              <IconButton
+              aria-label="more"
+              id="long-button"
+              aria-controls={open ? 'long-menu' : undefined}
+              aria-expanded={open ? 'true' : undefined}
+              aria-haspopup="true"
+              onClick={handleClick}
+      >
+      <Report className="h-5 text-gray-500 group-hover:text-green-500" />
+
+        </IconButton>
               </div>
             </div>
           )}
-
+ <Menu
+        id="long-menu"
+        MenuListProps={{
+          'aria-labelledby': 'long-button',
+        }}
+        anchorEl={anchorEl}
+        open={open}
+        
+        onClose={handleClose}
+        PaperProps={{
+          style: {
+            maxHeight: ITEM_HEIGHT * 4.5,
+            width: '30ch',
+            background:'black',
+            color:'white'
+          
+          },
+        }}
+      >
+        {options.map((option) => (
+          <MenuItem key={option}  selected={option === 'spam'} onClick={async (event)=>{
+            event.stopPropagation();
+            console.log(event.currentTarget.dataset)
+            console.log(event.target.value)
+            setAnchorEl(null);
+            console.log(option)
+            const data = await flagPost({flag:option,postId:post?._id},{'usertoken':localStorage.getItem('usertoken')})
+            if(data.status=='failed'){
+              toast.error(`This post already reported`, {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+                });
+            }else {
+              toast.success(`successfully reported post`, {
+                position: "top-center",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+                });
+            }
+            }}>
+            {option}
+          </MenuItem>
+        ))}
+      </Menu>
           <div
             className="flex items-center space-x-1 group"
             onClick={(e) => {
@@ -235,9 +339,23 @@ function Posts({post, postPage}:any) {
           </div>
 
           <div className="icon group">
-            <OKShareButton  quote={'Dummy text!'} url={'http://localhost:3000/'} >
-              <ShareIcon className="h-5 group-hover:text-[#1d9bf0]"/>
-              </OKShareButton>
+            {/* <OKShareButton  quote={'Dummy text!'} url={'http://localhost:3000/'} > */}
+              <ShareIcon onClick={(e)=>{
+                e.stopPropagation();
+                navigator.clipboard.writeText(`http://localhost:3000/${post._id}`);
+                toast.success(`Link copied to clipboard`, {
+                  position: "top-right",
+                  autoClose: 5000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: true,
+                  progress: undefined,
+                  theme: "dark",
+                  });
+              }} className="h-5 group-hover:text-[#1d9bf0]"/>
+              
+              {/* </OKShareButton> */}
           </div>
      
             {/* newwwwwwwwwwwwwwwwwwwww */}

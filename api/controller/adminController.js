@@ -87,7 +87,7 @@ export async function AdminSignin(req,res){
 
   export async function  getAllUserDetails(req,res){
     try {
-      const users = await usermodel.find({})
+      const users = await usermodel.find({}).sort({updatedAt:-1})
      
     
       res.json({"status":"success","message":"data fetched successfully",users })
@@ -112,7 +112,7 @@ export async function AdminSignin(req,res){
 
   export async function  getNotAprovedJobs(req,res){
     try {
-      const jobs = await jobmodel.find({approved:false}).populate("company")
+      const jobs = await jobmodel.find({approved:false}).populate("company").sort({updatedAt:-1})
      
     
       res.json({"status":"success","message":"data fetched successfully",jobs })
@@ -134,3 +134,52 @@ export async function AdminSignin(req,res){
     }
   }
 
+  export async function  getAllCompanyDetails(req,res){
+    try {
+      const company = await companymodel.find({}).sort({updatedAt:-1})
+      res.json({"status":"success","message":"data fetched successfully",company })
+    } catch (error) {
+      res.json({"status":"failed", "message":error.message})
+    }
+  }
+
+  export async function  getAllJobDetails(req,res){
+    try {
+      const job = await jobmodel.find({}).populate("company").sort({updatedAt:-1})
+      res.json({"status":"success","message":"data fetched successfully",job })
+    } catch (error) {
+      res.json({"status":"failed", "message":error.message})
+    }
+  }
+
+
+
+  export async function  flagCompany(req,res){
+    try {
+      const {isBanned} = req.body
+      const id = req.params.id
+      await companymodel.findByIdAndUpdate(id,{isBanned})
+     
+    
+      res.json({"status":"success","message":"status updated success",id,isBanned})
+    } catch (error) {
+      res.json({"status":"failed", "message":error.message})
+    }
+  }
+
+
+  
+  export async function  flagJob(req,res){
+    try {
+      const {isBanned,approved} = req.body
+      const id = req.params.id
+      console.log(isBanned, approved)
+      
+      await jobmodel.findByIdAndUpdate(id,{isBanned,approved})
+     
+    
+      res.json({"status":"success","message":"status updated success",id,isBanned})
+    } catch (error) {
+      res.json({"status":"failed", "message":error.message})
+    }
+  }

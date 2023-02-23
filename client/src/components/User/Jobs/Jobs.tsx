@@ -7,19 +7,23 @@ import { useRouter } from "next/router";
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
 import JobContainer from "@/components/Company/JobContainer";
+import {jobs} from "@/redux/jobs";
+import { useDispatch, useSelector } from "react-redux";
+function JobsComponent() {
 
-function Jobs() {
+  let job = useSelector((state:any)=>state.jobs.value)
+  let dispatch = useDispatch(jobs)
   const router = useRouter();
   const [refresh , setRefresh]= useState(false)
-  const [jobs, setJobs] = useState([])
+  // const [jobs, setJobs] = useState([])
   useEffect(() =>{
     async function invoke(){
 
      
       const data = await getAllJobs({'usertoken':localStorage.getItem('usertoken')})
       if(data?.jobs){
-      
-        setJobs(data.jobs)
+        dispatch(jobs(data.jobs))
+        // setJobs(data.jobs)
       }
      
       
@@ -32,11 +36,11 @@ function Jobs() {
   return (
     <div className=" flex items-center justify-center">
       <ToastContainer />
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-2 p-5 cursor-pointer">
+      <div className=" grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-2 p-5 cursor-pointer">
       
-      {jobs &&
+      {job &&
         
-          jobs.map((job)=>(<JobContainer job={job} applied={false} refresh={refresh} setRefresh={setRefresh} />)
+          job.map((job)=>(<JobContainer job={job} applied={false} refresh={refresh} setRefresh={setRefresh} />)
           
 
    
@@ -54,4 +58,4 @@ function Jobs() {
   );
 }
 
-export default Jobs;
+export default JobsComponent;

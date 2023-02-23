@@ -19,9 +19,9 @@ function Sidebar({userDetails}:any) {
         <Link href={"/jobs"}><SidebarLink text='Jobs' Icon={BriefcaseIcon} active={false} /> </Link>
        <Link href={"/jobs/appliedjobs"}><SidebarLink text='Applied jobs' Icon={ApprovalRounded} active={false} /> </Link> 
         <SidebarLink text='Notification' Icon={BellIcon} active={false} />
-        <SidebarLink text='Messages' Icon={InboxIcon} active={false}/>
+        <Link href={"/chat"}> <SidebarLink text='Messages' Icon={InboxIcon} active={false}/> </Link> 
         <Link href={'/companies'}>
-        <SidebarLink text='Comapany' Icon={BuildingOffice2Icon} active={false}/>
+        <SidebarLink text='Company' Icon={BuildingOffice2Icon} active={false}/>
         </Link> 
         <SidebarLink text='My jobs' Icon={HeartIcon} active={false} />
         <SidebarLink text='More' Icon={EllipsisHorizontalCircleIcon} active={false} />

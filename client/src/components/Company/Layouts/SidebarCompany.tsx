@@ -25,8 +25,12 @@ function SidebarCompany() {
        <Link href='/company/approvedusers'>
        <SidebarLinkCompany text='Approved users' Icon={ApprovalRounded} active={false} />
        </Link>
+       <Link href='/company/notification'>
        <SidebarLinkCompany text='Notification' Icon={BellIcon} active={false} />
+       </Link>
+       <Link href='/company/message'>
         <SidebarLinkCompany text='Messages' Icon={InboxIcon} active={false}/>
+        </Link>
         <SidebarLinkCompany text='Questions' Icon={Help} active={false} />
         
       </div>

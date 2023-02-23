@@ -9,7 +9,8 @@ import userRouter from './routes/user.js';
 import connectDb from './config/dbconnection.js'
 import companyRouter from './routes/company.js';
 import adminRouter from './routes/admin.js'
-
+import chatRouter from './routes/chatRoute.js'
+import messageRouter from './routes/messageRoute.js'
 //variables
 const port = process.env.PORT
 const DATABASE_URL = process.env.DATABASE_URL
@@ -37,8 +38,8 @@ app.use(cookieParser())
 app.use('/',userRouter)
 app.use('/company',companyRouter)
 app.use('/admin',adminRouter)
-
-
+app.use('/chat',chatRouter)
+app.use('/message',messageRouter)
 
 
 app.listen(port,()=>{

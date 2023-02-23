@@ -1,5 +1,5 @@
 import Moment from "react-moment"
-import {ChatBubbleLeftIcon,ChartBarIcon, EllipsisHorizontalIcon, HeartIcon, ShareIcon} from "@heroicons/react/24/solid"
+import {ChatBubbleLeftIcon,ChartBarIcon, EllipsisHorizontalIcon, HeartIcon, ShareIcon, TrashIcon} from "@heroicons/react/24/solid"
 
 function Comment({comment}:any) {
   return (
@@ -36,7 +36,7 @@ function Comment({comment}:any) {
 
           <div className="flex items-center space-x-1 group">
             <div className="icon group-hover:bg-pink-600/10">
-              <HeartIcon className="h-5 group-hover:text-pink-600" />
+              <TrashIcon className="h-5 group-hover:text-pink-600" />
             </div>
             <span className="group-hover:text-pink-600 text-sm"></span>
           </div>

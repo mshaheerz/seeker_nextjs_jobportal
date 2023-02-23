@@ -1,11 +1,13 @@
 import { useEffect ,useState} from 'react'
 import HeartIcon from "@heroicons/react/24/outline/HeartIcon";
 import { useRouter } from 'next/router';
-import { ApplyJob, getOneApplydJob } from '@/config/endpoints';
+import { ApplyJob, Notify, getOneApplydJob } from '@/config/endpoints';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
+import { useSelector } from 'react-redux';
 function JobContainer({job,refresh,setRefresh,applied,jobs}:any) {
     const [applyd, setApplyd] = useState(false)
+    const users = useSelector((state:any)=>state.user.value)
     const [applydetails, setApplyDetails]= useState([])
     const router = useRouter();
     useEffect(() =>{
@@ -25,6 +27,13 @@ function JobContainer({job,refresh,setRefresh,applied,jobs}:any) {
           const data = await ApplyJob(jobId,companyId,{'usertoken':localStorage.getItem('usertoken')})
           console.log(data)
           if(data.status=='success'){
+            const notification = await Notify({
+              authorUser:users?.userId,
+              recieverCompany:companyId,
+              content:`${users?.firstname} is applyd job`,
+              href:'/company/applications'
+            })
+            console.log(notification)
             setRefresh(!refresh)
             toast.success(`${data.message}`, {
               position: "top-right",
@@ -50,9 +59,9 @@ function JobContainer({job,refresh,setRefresh,applied,jobs}:any) {
           }
         }
   return (
-    <div key={job._id} className="flex-shrink justify-center" onClick={()=>router.push(`/jobs/${job._id}`)}>
+    <div key={job._id} className="flex  justify-items-center" onClick={()=>router.push(`/jobs/${job._id}`)}>
            <ToastContainer />
-    <div className="block p-6 rounded-lg shadow-lg border-2 border-white  max-w-xl">
+    <div className="block   p-6 rounded-lg shadow-lg border-2 border-white  max-w-xl">
       <h5 className="text-gray-200 text-xl leading-tight font-medium mb-1">
         {job.jobtitle} 
       </h5>
@@ -78,14 +87,14 @@ function JobContainer({job,refresh,setRefresh,applied,jobs}:any) {
 
 
       <p className="text-gray-200 font-normal whitespace-pre-line  text-sm mb-1">
-        {job?.jobdescription.substring(0 , 400)}...
+        {job?.jobdescription.substring(0 , 370)}... <span className='text-blue-600 hover:underline'>readmore</span>
       </p>  
       {
         applied && (
             <div className='mb-3 text-white'>
                
                 
-                <p className='font-semibold'>status: <span className={`${!jobs.status ? 'text-yellow-400' : 'text-green-500'}`}> {jobs.status} </span></p>
+                <p className='font-semibold'>status: <span className={`${jobs?.status=='pending' ? 'text-yellow-400' : 'text-green-500'}`}> {jobs.status} </span></p>
            </div>
         )
     }
