@@ -12,7 +12,7 @@ import swal from 'sweetalert'
 import { useRouter } from 'next/router'
 
 
-function adminPage() {
+function AdminPage() {
     
     const router = useRouter()
     const [adminDetails, setAdminDetails] = useState('')
@@ -41,10 +41,9 @@ function adminPage() {
      const logout=()=>{
         swal({
           title: "Are you sure?",
-          background:'black',
           text: "Once logout, you need to add credentials when login",
           icon: "warning",
-          buttons: true,
+          buttons: ["cancel","ok"],
           dangerMode: true,
         })
         .then((willDelete) => {
@@ -97,4 +96,4 @@ function adminPage() {
 }
 
 
-export default adminPage
+export default AdminPage

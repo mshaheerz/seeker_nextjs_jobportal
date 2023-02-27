@@ -35,16 +35,16 @@ const NotificationSchema = new mongoose.Schema({
             
 },
 {
+    timestamps:true,
     capped: {
         size:1024,
         max: 1000,
         autoIndexId:true
     }
-},
+  },
 
-{
-  timestamps:true,
-}
+
+
 );
 
 

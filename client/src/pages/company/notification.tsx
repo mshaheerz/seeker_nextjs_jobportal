@@ -29,7 +29,9 @@ function CompanyPage() {
         setRecieveNotification(data);
     });
   }, []);
-  let setCompanydetails = useDispatch(companyInfo)
+  let setCompanydetails = useDispatch()
+    //companyInfo
+
 
   let companyDetails = useSelector((state:any)=>state.companyinfo.value)
   const router = useRouter()
@@ -58,10 +60,9 @@ function CompanyPage() {
  const logout=()=>{
   swal({
     title: "Are you sure?",
-    background:'black',
     text: "Once logout, you need to add credentials when login",
     icon: "warning",
-    buttons: true,
+    buttons: ["cancel","ok"],
     dangerMode: true,
   })
   .then((willDelete) => {

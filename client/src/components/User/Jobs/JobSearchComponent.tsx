@@ -7,7 +7,8 @@ function JobSearchComponent() {
     const [search, setSearch] = useState('')
     const [filter , setFilter]= useState(null)
     let job = useSelector((state:any)=>state.jobs.value)
-    let dispatch = useDispatch(jobs)
+    let dispatch = useDispatch()
+    //jobs
     const searchHandler = async (e:any)=>{
         setSearch(e.target.value);
         const data = await SearchJob(e.target.value,{'usertoken':localStorage.getItem('usertoken')})
@@ -61,7 +62,7 @@ function JobSearchComponent() {
         />
         <datalist id="searchers">
     {job?.map((item:any) =>
-      <option  value={item.jobtitle} />
+      <option key={item?._id}  value={item.jobtitle} />
     )}
   </datalist>
       

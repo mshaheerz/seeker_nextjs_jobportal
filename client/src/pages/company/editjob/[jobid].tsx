@@ -15,7 +15,8 @@ import { getOneJobNoAuth } from "@/config/endpoints";
 function EditJob({job}:any) {
 
   
-  let setCompanydetails = useDispatch(companyInfo)
+  let setCompanydetails = useDispatch()
+  //companyInfo
 
   
   let companyDetails = useSelector((state:any)=>state.companyinfo.value)
@@ -44,10 +45,9 @@ function EditJob({job}:any) {
  const logout=()=>{
   swal({
     title: "Are you sure?",
-    background:'black',
     text: "Once logout, you need to add credentials when login",
     icon: "warning",
-    buttons: true,
+    buttons: ["cancel","ok"],
     dangerMode: true,
   })
   .then((willDelete) => {

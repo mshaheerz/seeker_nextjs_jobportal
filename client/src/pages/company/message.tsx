@@ -20,7 +20,8 @@ import { UserChats } from "@/config/endpoints";
 import { AppContext } from "@/context/AppContext";
 function MessagePage() {
 
-  let setCompanydetails = useDispatch(companyInfo)
+  let setCompanydetails = useDispatch()
+  //companyInfo
   const [chats, setchats] = useState([]);
   const [onlineUsers, setOnlineUsers] = useState([]);
   const [currentChat, setCurrentChat] = useState(null);
@@ -96,10 +97,9 @@ function MessagePage() {
  const logout=()=>{
   swal({
     title: "Are you sure?",
-    background:'black',
     text: "Once logout, you need to add credentials when login",
     icon: "warning",
-    buttons: true,
+    buttons: ["cancel","ok"],
     dangerMode: true,
   })
   .then((willDelete) => {
@@ -137,13 +137,13 @@ function MessagePage() {
             </div>
             <Logout onClick={logout} className=" h-5 pl-4 mt-4 w-9 rounded-full xl:mr-2.5 cursor-pointer  "/>
           </div>
-          <div className="h-auto flex items-center justify-start">
+          <div className=" flex items-center justify-start">
            <ChatList setCurrentChat={setCurrentChat} chats={chats}  companyDetails={companyDetails} />
 
            <ChatBoxCompany recieveMessage={recieveMessage} setSendMessage={setSendMessage} chat={currentChat} companyDetails={companyDetails} />
      
     </div>
-          <div className="pb-72"></div>
+          <div className=""></div>
         </div>
         {/* feed */}
         {/* <Feed /> */}

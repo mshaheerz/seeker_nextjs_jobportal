@@ -14,7 +14,8 @@ import BottomNavigationBar from "@/components/Company/Layouts/BottomNavigationBa
 import Widgets from "@/components/User/Feed/Widgets";
 import CompaniesComponent from "@/components/User/CompaniesComponent";
 function CompaniesPage() {
-  let dispatch = useDispatch(user);
+  let dispatch = useDispatch();
+  //user
   let [userDetails, setUserDetails] = useState({});
   const router = useRouter();
   const users = useSelector((state:any)=>state.user.value)
@@ -46,10 +47,9 @@ function CompaniesPage() {
   const logout=()=>{
     swal({
       title: "Are you sure?",
-      background:'black',
       text: "Once logout, you need to add credentials when login",
       icon: "warning",
-      buttons: true,
+      buttons: ["cancel","ok"],
       dangerMode: true,
     })
     .then((willDelete) => {
@@ -83,8 +83,7 @@ function CompaniesPage() {
             </div>
 
           </div>
-          //jobs component
-          <CompaniesComponent applied={false}/>
+          <CompaniesComponent/>
           <div className="pb-72"></div>
         </div>
 

@@ -14,14 +14,10 @@ function ChatList({companyDetails,chats,setCurrentChat}:any) {
       {
         
         chats?.map((chat:any)=>
-           <OneChat setCurrentChat={setCurrentChat} chat={chat} companyDetails={companyDetails} onClick={()=>setCurrentChat(chat)} /> 
+           <OneChat key={chat?._id} setCurrentChat={setCurrentChat} chat={chat} companyDetails={companyDetails} onClick={()=>setCurrentChat(chat)} /> 
         )
       }
       
-     
-
-
-
       </div>
      </div>
     </div>

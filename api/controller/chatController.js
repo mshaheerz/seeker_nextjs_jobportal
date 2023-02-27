@@ -26,7 +26,7 @@ export const userChats = async(req, res)=>{
     try {
       const chat = await chatmodel.find({
         members:{$in: [req.params.userId]}
-      })
+      }).sort({createdAt:-1})
       res.json({status:'success',chat:chat})
 
     } catch (error) { 

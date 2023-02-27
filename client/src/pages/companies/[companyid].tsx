@@ -27,7 +27,8 @@ import { ToastContainer, toast } from 'react-toastify';
 
 function CompanDetailsPage({company}:any) {
 
-  let dispatch = useDispatch(user);
+  let dispatch = useDispatch();
+  //user
   const [jobs, setJobs]  =useState([])
   const {setPostRefresh,postRefresh}:any = useContext(AppContext)
   const users = useSelector((state:any)=>state.user.value)
@@ -82,10 +83,9 @@ function CompanDetailsPage({company}:any) {
   const logout=()=>{
     swal({
       title: "Are you sure?",
-      background:'black',
       text: "Once logout, you need to add credentials when login",
       icon: "warning",
-      buttons: true,
+      buttons: ["cancel","ok"],
       dangerMode: true,
     })
     .then((willDelete) => {
@@ -134,7 +134,7 @@ function CompanDetailsPage({company}:any) {
       
       {jobs &&
         
-          jobs.map((job)=>(<JobContainer job={job} applied={false} refresh={refresh} setRefresh={setRefresh} />)
+          jobs.map((job:any)=>(<JobContainer key={job?._id} job={job} applied={false} refresh={refresh} setRefresh={setRefresh} />)
           
 
    

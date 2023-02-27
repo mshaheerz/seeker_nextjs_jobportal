@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 
 
 function Dashboard() {
-    const [counts , setCounts] = useState({})
+    const [counts , setCounts] = useState<any>({})
     useEffect(() => {
         async function invoke(){
             const data:any = await getDashboardCounts({'admintoken':localStorage.getItem('admintoken')})

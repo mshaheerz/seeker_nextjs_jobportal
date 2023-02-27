@@ -8,6 +8,7 @@ import jobmodel from "../model/jobSchema.js";
 import adminmodel from "../model/adminSchema.js";
 import jobapplymodel from "../model/jobapplySchema.js";
 import companymodel from "../model/company/companySchema.js";
+import reportmodel from "../model/reportSchema.js";
 export async function AdminSignin(req,res){
     try {
       let obj = req.body
@@ -179,6 +180,18 @@ export async function AdminSignin(req,res){
      
     
       res.json({"status":"success","message":"status updated success",id,isBanned})
+    } catch (error) {
+      res.json({"status":"failed", "message":error.message})
+    }
+  }
+
+
+  
+
+  export async function  getAllReports(req,res){
+    try {
+      const reports  = await reportmodel.find({}).populate("post")
+      res.json({"status":"success","message":"status updated success",reports})
     } catch (error) {
       res.json({"status":"failed", "message":error.message})
     }

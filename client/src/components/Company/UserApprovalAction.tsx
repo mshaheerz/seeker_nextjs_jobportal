@@ -1,24 +1,40 @@
 import { AnyAction } from "redux";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Box, CircularProgress, Fab } from "@mui/material";
 import { Check, Save } from "@mui/icons-material";
 import { flagUser } from "@/config/companyendpoints";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
 import { approveUser } from "@/config/companyendpoints";
+import { Notify } from "@/config/endpoints";
+import { AppContext } from "@/context/AppContext";
+import { useSelector } from "react-redux";
 
 function JobApprovalAction({ params, rowId, setRowId, refresh, setRefresh }: any) {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const {
+    sendNotification,setSendNotification
+  }: any = useContext(AppContext);
+  
+  let companyDetails = useSelector((state:any)=>state.companyinfo.value)
   const handleSubmit = async () => {
     setLoading(true);
 
-    const { approve, _id } = params.row;
+    const { approve, _id,user} = params.row;
     console.log(approve);
     const data = await approveUser(approve, _id, {
       companytoken: localStorage.getItem("companytoken"),
     });
     if (data.status === "success") {
+      const notification = await Notify({
+        authorCompany:companyDetails?._id,
+        recieverUser:user?._id,
+        content:`${companyDetails?.company} is approved your job request`,
+        href:'/jobs/appliedjobs'
+      })
+      setSendNotification({recieverId:user?._id,notification:`${companyDetails?.company} is approved your job request`})
+
       toast.success(`job status successfully updated`, {
         position: "top-right",
         autoClose: 5000,

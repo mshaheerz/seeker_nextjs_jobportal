@@ -84,11 +84,11 @@ function ApprovedJobs() {
         },
       },
       {
-        field: "firsrname",
+        field: "name",
         headerName: "name",
         width: 170,
         renderCell: (params: any) => {
-          return <div className="rowitem">{params.row.user.firstname}</div>;
+          return <div className="rowitem">{params.row.user.firstname} {params.row.user.lastname}</div>;
         },
       },
       {
@@ -96,7 +96,7 @@ function ApprovedJobs() {
         headerName: "Lastname",
         width: 170,
         renderCell: (params: any) => {
-          return <div className="rowitem">{params.row.user.lastname}</div>;
+          return <div className="rowitem">{params.row?.job?.jobtitle}</div>;
         },
       },
       {
@@ -119,16 +119,17 @@ function ApprovedJobs() {
         field: "resume",
         headerName: "Resume",
         width: 150,
-        renderCell: (params) => {
+        renderCell: (params:any) => {
           return (
             <div className="rowitem">
               <a
                 className="text-blue-500"
                 href={params.row.user.resume}
+                rel="noopener noreferrer" 
                 download
                 target="_blank"
               >
-                download
+                Download
               </a>
             </div>
           );
@@ -154,7 +155,7 @@ function ApprovedJobs() {
         headerName: "Action",
         width: 200,
         type: "action",
-        renderCell: (params) => (
+        renderCell: (params:any) => (
           <UserApprovalAction {...{ params, rowId, setRowId, refresh, setRefresh }} />
         ),
       },
@@ -186,12 +187,12 @@ function ApprovedJobs() {
           }}
           columns={columns}
           rows={jobs}
-          getRowId={(row) => row?._id}
+          getRowId={(row:any) => row?._id}
           getRowSpacing={(params) => ({
             top: params.isFirstVisible ? 0 : 5,
             bottom: params.isLastVisible ? 0 : 5,
           })}
-          onCellEditCommit={(params) => setRowId(params.id)}
+          onCellEditCommit={(params:any) => setRowId(params.id)}
         />
       </Box>
     </ThemeProvider>

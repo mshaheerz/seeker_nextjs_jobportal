@@ -23,7 +23,8 @@ import { UserChats } from "@/config/endpoints";
 import ChatBox from "@/components/Chat/ChatBox";
 import { io } from "socket.io-client";
 function ChatPage() {
-  let dispatch = useDispatch(user);
+  let dispatch = useDispatch();
+  //user
   const [chats, setchats] = useState([]);
   const [onlineUsers, setOnlineUsers] = useState([]);
   const [currentChat, setCurrentChat] = useState(null);
@@ -61,11 +62,7 @@ function ChatPage() {
 
 
   useEffect(() => {
-  if(socket.current ==null){
-    // socket.current = io("ws://localhost:8800");
     socket.emit("new-user-add", users?.userId);
-  }
-
     socket.on("get-users", (userss:any) => {
       setOnlineUsers(userss);
       console.log('online users',onlineUsers);
@@ -106,10 +103,10 @@ function ChatPage() {
   const logout = () => {
     swal({
       title: "Are you sure?",
-      background: "black",
+      // background: "black",
       text: "Once logout, you need to add credentials when login",
       icon: "warning",
-      buttons: true,
+      buttons: ["cancel","ok"],
       dangerMode: true,
     }).then((willDelete) => {
       if (willDelete) {
@@ -141,8 +138,8 @@ function ChatPage() {
               <Logout className="h-5 text-white" onClick={logout} />
             </div>
           </div>
-          //
-          <div className="pb-72 mt-5 text-white">
+          
+          <div className="mt-5 text-white">
             <ChatBox
               recieveMessage={recieveMessage}
               setSendMessage={setSendMessage}

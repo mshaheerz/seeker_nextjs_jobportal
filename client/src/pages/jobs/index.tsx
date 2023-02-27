@@ -15,7 +15,8 @@ import Widgets from "@/components/User/Feed/Widgets";
 import JobSearchComponent from "@/components/User/Jobs/JobSearchComponent";
 
 function JobsPage() {
-  let dispatch = useDispatch(user);
+  let dispatch = useDispatch();
+  //user
   let [userDetails, setUserDetails] = useState({});
   const router = useRouter();
   const users = useSelector((state:any)=>state.user.value)
@@ -47,10 +48,9 @@ function JobsPage() {
   const logout=()=>{
     swal({
       title: "Are you sure?",
-      background:'black',
       text: "Once logout, you need to add credentials when login",
       icon: "warning",
-      buttons: true,
+      buttons: ["cancel","ok"],
       dangerMode: true,
     })
     .then((willDelete) => {
@@ -87,7 +87,7 @@ function JobsPage() {
           <JobSearchComponent />
        
           <div className="pb-72">
-          <Jobs applied={false}/>
+          <Jobs/>
           </div>
         </div>
 

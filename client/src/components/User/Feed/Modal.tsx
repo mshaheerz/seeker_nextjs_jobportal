@@ -18,11 +18,14 @@ const commentrefresh = useSelector((state:any)=>state.refreshcomment.value)
 const user = useSelector((state:any)=>state.user.value)
 const isOpen = useSelector((state:any)=>state.setisopen.value)
 const postId = useSelector((state:any)=>state.setpostid.value)
-const dispatchpostid = useDispatch(setpostid)
-const dispatchisopen = useDispatch(setisopen)
-const setCommentRefresh = useDispatch(refreshComment)
+const dispatchpostid = useDispatch()
+//setpostid
+const dispatchisopen = useDispatch()
+//setisopen
+const setCommentRefresh = useDispatch()
+//refreshComment
 const router = useRouter();
-const [post, setPost] = useState([]);
+const [post, setPost] = useState<any>([]);
 const [comment, setComment] = useState("");
 
 
@@ -41,6 +44,7 @@ const sendComment = async (e:any) => {
     const data = await addComment({text:comment,user:user.userId,post:post._id},{"usertoken":localStorage.getItem("usertoken")})
     console.log(data)
     dispatchisopen( setisopen(false))
+    setCommentRefresh(refreshComment(!commentrefresh))
     setComment("");
 }
 

@@ -19,9 +19,10 @@ import { getOneUserNoAuth, getProfilePosts, getUserPosts } from "@/config/endpoi
 import Posts from "@/components/User/Feed/Posts";
 import UserInfos from "@/components/User/UserInfos";
 
-function userProfilePage({userInfo}:any) {
+function UserProfilePage({userInfo}:any) {
 
-  let dispatch = useDispatch(user);
+  let dispatch = useDispatch();
+  //user
   const [posts, setPosts]  =useState([])
   const {setPostRefresh,postRefresh}:any = useContext(AppContext)
   const users = useSelector((state:any)=>state.user.value)
@@ -73,10 +74,9 @@ function userProfilePage({userInfo}:any) {
   const logout=()=>{
     swal({
       title: "Are you sure?",
-      background:'black',
       text: "Once logout, you need to add credentials when login",
       icon: "warning",
-      buttons: true,
+      buttons: ["cancel","ok"],
       dangerMode: true,
     })
     .then((willDelete) => {
@@ -119,7 +119,7 @@ function userProfilePage({userInfo}:any) {
 
 
           <div className="pb-72 mt-5 text-white">
-          {posts && posts.map((post)=> <Posts key={post?._id} id={post?._id} post={post} />
+          {posts && posts.map((post:any)=> <Posts key={post?._id} id={post?._id} post={post} />
     
     )}
 
@@ -139,7 +139,7 @@ function userProfilePage({userInfo}:any) {
   );
 }
 
-export default userProfilePage;
+export default UserProfilePage;
 
 
 export async  function getServerSideProps(context:any){

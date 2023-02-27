@@ -12,7 +12,8 @@ import { useDispatch, useSelector } from "react-redux";
 function JobsComponent() {
 
   let job = useSelector((state:any)=>state.jobs.value)
-  let dispatch = useDispatch(jobs)
+  let dispatch = useDispatch()
+  //jobs
   const router = useRouter();
   const [refresh , setRefresh]= useState(false)
   // const [jobs, setJobs] = useState([])
@@ -40,19 +41,10 @@ function JobsComponent() {
       
       {job &&
         
-          job.map((job)=>(<JobContainer job={job} applied={false} refresh={refresh} setRefresh={setRefresh} />)
-          
-
-   
-
+          job.map((job:any)=>(<JobContainer key={job?._id} job={job} applied={false} refresh={refresh} setRefresh={setRefresh} />)
+        
         )
       }
-       
-
-
-
-
-
       </div>
     </div>
   );

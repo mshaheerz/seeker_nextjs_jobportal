@@ -1,11 +1,15 @@
-import { useEffect ,useState} from 'react'
+import { useContext, useEffect ,useState} from 'react'
 import HeartIcon from "@heroicons/react/24/outline/HeartIcon";
 import { useRouter } from 'next/router';
 import { ApplyJob, Notify, getOneApplydJob } from '@/config/endpoints';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
 import { useSelector } from 'react-redux';
+import { AppContext } from '@/context/AppContext';
 function JobContainer({job,refresh,setRefresh,applied,jobs}:any) {
+  const {
+    sendNotification,setSendNotification
+  }: any = useContext(AppContext);
     const [applyd, setApplyd] = useState(false)
     const users = useSelector((state:any)=>state.user.value)
     const [applydetails, setApplyDetails]= useState([])
@@ -33,7 +37,8 @@ function JobContainer({job,refresh,setRefresh,applied,jobs}:any) {
               content:`${users?.firstname} is applyd job`,
               href:'/company/applications'
             })
-            console.log(notification)
+            // console.log(notification)
+            setSendNotification({recieverId:job?.company._id,notification:`${users?.firstname} is applyd job`})
             setRefresh(!refresh)
             toast.success(`${data.message}`, {
               position: "top-right",
@@ -71,15 +76,15 @@ function JobContainer({job,refresh,setRefresh,applied,jobs}:any) {
       
       <div className="flex-shrink space-x-2 justify-start mb-4">
         {job?.jobtype &&
-          job.jobtype.map((element: string | number | boolean | ReactElement<any, string | JSXElementConstructor<any>> | ReactFragment | ReactPortal | null | undefined) => {
-           return (<span className="text-xs inline-block py-1 px-2.5 leading-none text-center whitespace-nowrap align-baseline font-bold bg-[#2C2C32] text-white rounded">{element}</span>) 
+          job.jobtype.map((element:any) => {
+           return (<span key={element} className="text-xs inline-block py-1 px-2.5 leading-none text-center whitespace-nowrap align-baseline font-bold bg-[#2C2C32] text-white rounded">{element}</span>) 
 
           })
         }
 
         {
-          job?.schedule && job.schedule.map(element=>(
-            <span className="text-xs inline-block py-1 px-2.5 leading-none text-center whitespace-nowrap align-baseline font-bold bg-[#2C2C32] text-white rounded">{element}</span>
+          job?.schedule && job.schedule.map((element:any)=>(
+            <span key={element} className="text-xs inline-block py-1 px-2.5 leading-none text-center whitespace-nowrap align-baseline font-bold bg-[#2C2C32] text-white rounded">{element}</span>
           ))
         }
        
@@ -105,6 +110,7 @@ function JobContainer({job,refresh,setRefresh,applied,jobs}:any) {
         onClick={(e)=>{
           e.stopPropagation();
           handlepost(job._id,job.company._id)
+          
         
         }}
       >

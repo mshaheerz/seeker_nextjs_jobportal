@@ -11,9 +11,11 @@ import { companyInfo } from '@/redux/companyinfo'
 import { useDispatch, useSelector } from "react-redux";
 import swal from 'sweetalert'
 import AppliedJobs from "@/components/Company/AppliedJobs";
-function jobApplications() {
+function JobApplications() {
 
-  let setCompanydetails = useDispatch(companyInfo)
+  let setCompanydetails = useDispatch()
+    //companyInfo
+
 
   let companyDetails = useSelector((state:any)=>state.companyinfo.value)
   const router = useRouter()
@@ -42,10 +44,9 @@ function jobApplications() {
  const logout=()=>{
   swal({
     title: "Are you sure?",
-    background:'black',
     text: "Once logout, you need to add credentials when login",
     icon: "warning",
-    buttons: true,
+    buttons: ["cancel","ok"],
     dangerMode: true,
   })
   .then((willDelete) => {
@@ -97,4 +98,4 @@ function jobApplications() {
   );
 }
 
-export default jobApplications;
+export default JobApplications;

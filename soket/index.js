@@ -44,10 +44,13 @@ io.on("connection", (socket)=> {
     });
 
     socket.on("send-notification", (data) => {
-        const { reciever } = data;
+        const { recieverId } = data;
+        console.log(recieverId)
         const user = activeUsers.find(user => {
-               return user.userId ===reciever;
+               return user.userId ===recieverId;
+               
         })
+        console.log(user)
         if(user) {
             console.log({data});
             io.to(user.socketId).emit('recieve-notification', data)

@@ -1,7 +1,7 @@
 import express from "express";
 const router = express.Router()
 import {verifyJWT,companyJwt} from '../middlewares/auth.js'
-import {editCompanyProfile,JobInactiveAndActive,editJob,companyapprovedJob,getAppliedJobs,getCompanyJobs,postJob,isCompanyAuth,Companysignup,companySignin, getApprovedJobs} from "../controller/companyController.js"
+import {DeleteApplyJob,editCompanyProfile,JobInactiveAndActive,editJob,companyapprovedJob,getAppliedJobs,getCompanyJobs,postJob,isCompanyAuth,Companysignup,companySignin, getApprovedJobs} from "../controller/companyController.js"
 
 router.post('/signup',Companysignup)
 router.post('/signin',companySignin)
@@ -27,6 +27,8 @@ router.put('/editjob/:jobId',companyJwt,editJob)
 router.patch('/approve_user/:id',companyJwt,companyapprovedJob)
 router.patch('/active_inactive_job/:jobId',companyJwt,JobInactiveAndActive)
 
+//delete methods
+router.delete('/applyjob/:jobId',companyJwt,DeleteApplyJob)
 
 
 export default router

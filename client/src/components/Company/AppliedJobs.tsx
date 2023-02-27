@@ -28,6 +28,8 @@ import {
 } from "@/config/companyendpoints";
 
 import JobAction from "../admin/JobAction";
+import { Delete } from "@mui/icons-material";
+import { deleteAppliedJob } from "@/config/endpoints";
 const theme = createTheme({
   palette: {
     mode: "dark",
@@ -43,6 +45,7 @@ function AppliedJobs() {
   const [jobs, setJobs] = useState([]);
   const [rowId, setRowId] = useState(null);
   const [refresh, setRefresh] = useState(false);
+
   useEffect(() => {
     async function invoke() {
       const data = await getAppliedJobs({
@@ -76,15 +79,7 @@ function AppliedJobs() {
         headerName: "name",
         width: 170,
         renderCell: (params: any) => {
-          return <div className="rowitem">{params.row.user.firstname}</div>;
-        },
-      },
-      {
-        field: "lastname",
-        headerName: "Lastname",
-        width: 170,
-        renderCell: (params: any) => {
-          return <div className="rowitem">{params.row.user.lastname}</div>;
+          return <div className="rowitem">{params.row.user.firstname +' '+params?.row?.user?.lastname}</div>;
         },
       },
       {
@@ -96,7 +91,7 @@ function AppliedJobs() {
         },
       },
       {
-        field: "phone",
+        field: "Phone",
         headerName: "Phone",
         width: 150,
         renderCell: (params: any) => {
@@ -107,7 +102,7 @@ function AppliedJobs() {
         field: "resume",
         headerName: "Resume",
         width: 150,
-        renderCell: (params) => {
+        renderCell: (params:any) => {
           return (
             <div className="rowitem">
               <a
@@ -115,11 +110,24 @@ function AppliedJobs() {
                 href={params.row.user.resume}
                 download
                 target="_blank"
+                rel="noreferrer"
               >
-                download
+                Download
               </a>
             </div>
           );
+        },
+      },
+      {
+        field: "delete",
+        headerName: "delete",
+        width: 150,
+        renderCell: (params: any) => {
+          return <div className="rowitem"><Delete className="cursor-pointer text-red-700" onClick={async ()=>{
+            const data= await deleteAppliedJob(params.row._id,{"companytoken":localStorage.getItem("companytoken")})
+            console.log(data)
+            setRefresh(!refresh)
+          }} /></div>;
         },
       },
       {
@@ -134,7 +142,7 @@ function AppliedJobs() {
         headerName: "Action",
         width: 200,
         type: "action",
-        renderCell: (params) => (
+        renderCell: (params:any) => (
           <UserApprovalAction {...{ params, rowId, setRowId, refresh, setRefresh }} />
         ),
       },
@@ -166,12 +174,12 @@ function AppliedJobs() {
           columns={columns}
           components={{Toolbar: GridToolbar}}
           rows={jobs}
-          getRowId={(row) => row?._id}
+          getRowId={(row:any) => row?._id}
           getRowSpacing={(params) => ({
             top: params.isFirstVisible ? 0 : 5,
             bottom: params.isLastVisible ? 0 : 5,
           })}
-          onCellEditCommit={(params) => setRowId(params.id)}
+          onCellEditCommit={(params:any) => setRowId(params.id)}
         />
       </Box>
     </ThemeProvider>

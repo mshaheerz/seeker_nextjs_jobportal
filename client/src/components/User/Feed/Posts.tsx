@@ -43,10 +43,14 @@ function Posts({post, postPage}:any) {
    
     const router = useRouter()
     const users = useSelector((state:any)=>state.user.value)
-    const dispatchpostid = useDispatch(setpostid)
-    const dispatchisopen = useDispatch(setisopen)
-    const setCommentRefresh = useDispatch(refreshComment)
-    const dispatch = useDispatch(user)
+    const dispatchpostid = useDispatch()
+    //setpostid
+    const dispatchisopen = useDispatch()
+    //setisopen
+    const setCommentRefresh = useDispatch()
+    //refreshComment
+    const dispatch = useDispatch()
+    //user
     const postss = useSelector((state:any)=>state.setpostid.value)
     const [comments, setComments]= useState(['1'])
     const [liked, setLiked]= useState(false)
@@ -212,10 +216,9 @@ function Posts({post, postPage}:any) {
                 e.stopPropagation();
                 swal({
                   title: "Are you sure?",
-                  background:'black',
                   text: "post delete",
                   icon: "warning",
-                  buttons: true,
+                  buttons: ["cancel","ok"],
                   dangerMode: true,
                 })
                 .then(async (willDelete) => {
@@ -278,14 +281,16 @@ function Posts({post, postPage}:any) {
         }}
       >
         {options.map((option) => (
-          <MenuItem key={option}  selected={option === 'spam'} onClick={async (event)=>{
+          <MenuItem key={option}  selected={option === 'spam'} onClick={async (event:any)=>{
             event.stopPropagation();
             console.log(event.currentTarget.dataset)
             console.log(event.target.value)
             setAnchorEl(null);
             console.log(option)
             const data = await flagPost({flag:option,postId:post?._id},{'usertoken':localStorage.getItem('usertoken')})
+            console.log(data)
             if(data.status=='failed'){
+
               toast.error(`This post already reported`, {
                 position: "top-right",
                 autoClose: 5000,

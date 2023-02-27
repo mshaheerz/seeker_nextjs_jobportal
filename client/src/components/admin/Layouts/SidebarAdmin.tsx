@@ -22,7 +22,7 @@ function SidebarAdmin() {
    </Link>
    <Link href='/admin/jobapprove'>
      <SidebarLinkCompany text='Job Approval' Icon={VerifiedUser} active={false}/>
-</Link>
+  </Link>
      <Link href='/admin/users'>
      <SidebarLinkCompany text='Users' Icon={AccountCircle} active={false} />
      </Link>
@@ -33,8 +33,9 @@ function SidebarAdmin() {
       <Link href='/admin/joblist'>
       <SidebarLinkCompany text='Jobs' Icon={BriefcaseIcon} active={false} />
       </Link>
+      <Link href='/admin/reports'>
       <SidebarLinkCompany text='reports/flag' Icon={Report} active={false} />
-      
+      </Link>
     </div>
   
  

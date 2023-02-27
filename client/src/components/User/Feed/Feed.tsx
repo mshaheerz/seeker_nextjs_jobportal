@@ -5,7 +5,6 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import axios from "@/config/axios";
 import Posts from "./Posts";
-import { db } from "@/firebase/firebase"
 import { AppContext } from "@/context/AppContext";
 import {useContext} from 'react'
 
@@ -29,10 +28,9 @@ function Feed() {
   const logout=()=>{
     swal({
       title: "Are you sure?",
-      background:'black',
       text: "Once logout, you need to add credentials when login",
       icon: "warning",
-      buttons: true,
+      buttons: ['cancel', 'Ok'],
       dangerMode: true,
     })
     .then((willDelete) => {
@@ -55,7 +53,7 @@ function Feed() {
         </div>
         <Input />
         <div className="pb-72">
-    {posts && posts.map((post)=> <Posts key={post._id} id={post._id} post={post} />
+    {posts && posts.map((post:any)=> <Posts key={post._id} id={post._id} post={post} />
     
 )}
         </div>

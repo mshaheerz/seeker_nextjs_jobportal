@@ -3,7 +3,7 @@ import Image from "next/image";
 import { getOneUserNoAuth,GetChatUsers } from '@/config/endpoints';
 import { useSelector } from 'react-redux';
 function ChatContainer({chat,currentUser,setCurrentChat}:any) {
-    const [userData, setUserData] = useState(null)
+    const [userData, setUserData] = useState<any>(null)
    const users = useSelector((state:any)=>state.user.value)
     useEffect(()=> {
 
@@ -25,7 +25,7 @@ function ChatContainer({chat,currentUser,setCurrentChat}:any) {
             src={userData?.image? userData.image :''  }
             width={50}
             height={50}
-            objectFit="cover"
+            // objectFit="cover"
             className="rounded-full object-cover" alt={""}          />
           <div className="ml-4 leading-5 group">
             <h4 className="font-bold group-hover:underline">

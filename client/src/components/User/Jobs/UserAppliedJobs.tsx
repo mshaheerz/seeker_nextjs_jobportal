@@ -30,12 +30,23 @@ function Jobs() {
 
   return (
     <div className=" flex items-center justify-center">
+        {
+          jobs.length==0 && (
+            <div>
+            <div className="text-white text-center text-3xl mt-5">Your not applied any jobs</div>
+            <div className=" text-center mt-3  ">
+              <a onClick={()=>router.push('/jobs')} className=" bg-white font-bold px-4 py-1 rounded cursor-pointer hover:bg-blue-400 hover:text-white">Apply now</a>
+            </div>
+            </div>
+          )
+        }
       <ToastContainer />
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-2 p-5 cursor-pointer">
       
+      
       {jobs &&
         
-          jobs.map((job)=>(<JobContainer job={job?.job} jobs={job} applied={true} refresh={refresh} setRefresh={setRefresh} />)
+          jobs.map((job:any)=>(<JobContainer key={job?._id} job={job?.job} jobs={job} applied={true} refresh={refresh} setRefresh={setRefresh} />)
           
 
    

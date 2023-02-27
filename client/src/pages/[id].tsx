@@ -14,18 +14,22 @@ import Posts from "@/components/User/Feed/Posts";
 import Comment from "@/components/User/Feed/Comment";
 import { refreshComment } from "@/redux/refreshcomment";
 
-function PostPage({comments,post}) {
+function PostPage({post,postId}:any) {
   const commentrefresh = useSelector(
     (state: any) => state.refreshcomment.value
   );
-  const setCommentRefresh = useDispatch(refreshComment);
-  const dispatchpostid = useDispatch(setpostid);
-  const dispatchisopen = useDispatch(setisopen);
+  const setCommentRefresh = useDispatch();
+  //refreshComment
+  const dispatchpostid = useDispatch();
+  //setpostid
+  const dispatchisopen = useDispatch();
+  //setisopen
   const router = useRouter();
   const isOpen = useSelector((state: any) => state.setisopen.value);
   let [userDetails, setUserDetails] = useState({});
   // let [post, setPost] = useState();
-  // let [comments, setComments] = useState([]);
+  const [refresh,setRefresh]=useState(false)
+  let [comments, setComments] = useState([]);
   const { id } = router.query;
   useEffect(() => {
     if (localStorage.getItem("usertoken")) {
@@ -50,16 +54,14 @@ function PostPage({comments,post}) {
     }
   }, []);
 
-  // useEffect(() => {
-  //   async function invoke() {
-  //     const data = await fetchComments(id, {
-  //       usertoken: localStorage.getItem("usertoken"),
-  //     });
-  //     console.log(data);
-  //     setComments(data.comments);
-  //   }
-  //   invoke();
-  // }, [commentrefresh]);
+  useEffect(() => {
+    async function invoke() {
+      const data = await fetchCommentsNoAuth(postId);;
+      console.log(data);
+      setComments(data?.comments);
+    }
+    invoke();
+  }, [commentrefresh]);
 
   // useEffect(() => {
   //   async function invoke() {
@@ -99,7 +101,7 @@ function PostPage({comments,post}) {
 
           {comments?.length > 0 && (
             <div className="pb-72">
-              {comments.map((comment) => (
+              {comments.map((comment:any) => (
                 <Comment key={comment._id} comment={comment} />
               ))}
             </div>
@@ -128,6 +130,7 @@ export async  function getServerSideProps(context:any){
 
   return {
     props:{
+        postId:context.params.id,
         comments:data?.comments||null,
         post:postdata?.posts || null
 

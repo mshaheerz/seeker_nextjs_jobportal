@@ -1,21 +1,19 @@
 import React, { useEffect, useState } from 'react'
-import { deleteNotification, getNotification } from '@/config/endpoints'
+import { deleteNotification, getNotification, getUserNotification } from '@/config/endpoints'
 import Link from 'next/link';
 import { Delete, DoneAll, NotificationsOff } from '@mui/icons-material';
 import { GridCloseIcon } from '@mui/x-data-grid';
 import Moment from 'react-moment';
 
-function NotificationComponent({companyId}:any) {
+function UserNotificationComponent({userId}:any) {
   const [notification, setNotification] = useState<any>([]);
   const [refresh, setRefresh] = useState(false)
   useEffect(() => {
     async function invoke(){
-       const data = await getNotification(companyId,{'companytoken':localStorage.getItem('companytoken')})
+       const data = await getUserNotification(userId,{'usertoken':localStorage.getItem('usertoken')})
        setNotification(data?.notification)
     }
     invoke();
-  
-  
   }, [refresh])
   
 
@@ -64,4 +62,4 @@ function NotificationComponent({companyId}:any) {
   )
 }
 
-export default NotificationComponent
+export default UserNotificationComponent

@@ -26,7 +26,8 @@ const inter = Inter({ subsets: ['latin'] })
 export default function Home() {
   let users = useSelector((state:any)=>state.user.value)
   const router = useRouter()
-  let dispatch = useDispatch(user)
+  let dispatch = useDispatch()
+  //user
   let [userDetails, setUserDetails]= useState({})
 //  const socket: any = useRef();
 

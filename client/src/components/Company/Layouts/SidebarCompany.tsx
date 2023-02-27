@@ -1,6 +1,6 @@
 import Link from "next/link"
 import SidebarLinkCompany from "./SidebarLinkCompany"
-import { BellIcon, BriefcaseIcon, EllipsisVerticalIcon, InboxIcon } from "@heroicons/react/24/solid"
+import { BellIcon, BriefcaseIcon, InboxIcon } from "@heroicons/react/24/solid"
 
 import { ApprovalRounded, Email ,Help} from "@mui/icons-material"
 import { useRouter } from "next/router"

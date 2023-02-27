@@ -206,7 +206,7 @@ export async function Companysignup(req,res){
   export async function getApprovedJobs(req,res){
     try {
       const companyId = req.companyId
-      const jobs = await jobapplymodel.find({company:companyId,status:'approved'}).populate('user').sort({updatedAt:-1})
+      const jobs = await jobapplymodel.find({company:companyId,status:'approved'}).populate('user').populate('job').sort({updatedAt:-1})
       res.json({"status":"success","message":"data fetched successfully",jobs})
     } catch (error) {
       
@@ -345,4 +345,15 @@ export async function Companysignup(req,res){
     res.json({ "status": "failed", "message": error.message })
   }
      
+  }
+
+
+  export async function DeleteApplyJob(req, res) {
+    try {
+      const jobId = req.params.jobId
+       await jobapplymodel.findByIdAndDelete(jobId)
+      res.json({ "status": "success", "message": "deleted successfully" })
+    } catch (error) {
+      res.json({ "status": "failed", "message": error.message })
+    }
   }

@@ -32,13 +32,14 @@ import { companyInfo } from "@/redux/companyinfo";
 
 
 function CompanyProfileComponent({ company }: any) {
-    let dispatch = useDispatch(companyInfo)
+    let dispatch = useDispatch()
+    //companyInfo
     let companyDetails = useSelector((state:any)=>state.companyinfo.value)
   const [open, setOpen] = useState(false);
   const [loading,setLoading] = useState(false);
   let [isOpen, setIsOpen] = useState(false);
-  const coverPickerRef = useRef<HTMLInputElement>(0)
-  const profilePickerRef = useRef<HTMLInputElement>(0)
+  const coverPickerRef = useRef<any>(0)
+  const profilePickerRef = useRef<any>(0)
   const [profileImage, setProfileImage] = useState(null)
   const [coverImage, setCoverImage] = useState(null)
   
@@ -73,7 +74,7 @@ function CompanyProfileComponent({ company }: any) {
       if(e.target.files[0]){
         reader.readAsDataURL(e.target.files[0]);
       }
-      reader.onload = (readerEvent)=>{
+      reader.onload = (readerEvent:any)=>{
         setCoverImage(readerEvent.target.result)
       }
     } catch (error) {
@@ -104,7 +105,7 @@ function CompanyProfileComponent({ company }: any) {
         if(e.target.files[0]){
           reader.readAsDataURL(e.target.files[0]);
         }
-        reader.onload = (readerEvent)=>{
+        reader.onload = (readerEvent:any)=>{
           setProfileImage(readerEvent.target.result)
         }
       } catch (error) {

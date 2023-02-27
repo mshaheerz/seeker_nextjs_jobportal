@@ -12,7 +12,7 @@ import CompanyListComponent from '@/components/admin/CompanyListComponent'
 import swal from 'sweetalert'
 import { useRouter } from 'next/router'
 import UserListsComponent from "@/components/admin/UserLists"
-function usersList() {
+function UsersList() {
     const router = useRouter()
     const [adminDetails, setAdminDetails] = useState('')
     useEffect(() => {
@@ -40,10 +40,9 @@ function usersList() {
      const logout=()=>{
         swal({
           title: "Are you sure?",
-          background:'black',
           text: "Once logout, you need to add credentials when login",
           icon: "warning",
-          buttons: true,
+          buttons: ["cancel","ok"],
           dangerMode: true,
         })
         .then((willDelete) => {
@@ -95,4 +94,4 @@ function usersList() {
     )
 }
 
-export default usersList
+export default UsersList

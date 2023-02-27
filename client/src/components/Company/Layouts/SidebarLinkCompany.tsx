@@ -2,7 +2,7 @@
 type objtype={
     text:string,
     active:boolean,
-    Icon:unknown
+    Icon:any
 }
 function SidebarLinkCompany({Icon, text,active}:objtype) {
   return (

@@ -22,7 +22,6 @@ import { useRouter } from "next/router";
 import { useDispatch } from "react-redux";
 import { AppContext } from "@/context/AppContext";
 import { auth } from "@/firebase/firebase";
-import { userActions } from "@/redux/signupdetails";
 
 const darkTheme = createTheme({
   palette: {

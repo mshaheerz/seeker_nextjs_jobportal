@@ -23,9 +23,9 @@ const theme = createTheme({
 
 function JobApproval() {
 
-    const [jobs, setJobs] = useState([])
-    const [rowId, setRowId]=useState(null)
-    const [refresh,setRefresh] = useState(false)
+    const [jobs, setJobs] = useState<any>([])
+    const [rowId, setRowId]=useState<any>(null)
+    const [refresh,setRefresh] = useState<any>(false)
     useEffect(()=>{
         async function invoke(){
             const data = await getNotApprovedJobs({'admintoken':localStorage.getItem('admintoken')})
@@ -36,21 +36,21 @@ function JobApproval() {
     },[refresh])
     const columns = useMemo(()=>[
         {field:'jobtitle',headerName:'Job Title',width:200},
-        {field:'company',headerName:'company',width:170, renderCell: (params) => {
+        {field:'company',headerName:'company',width:170, renderCell: (params:any) => {
             return <div className="rowitem">{params.row.company.company}</div>;
           }},
-        {field:'industry',headerName:'Industry',width:170,renderCell: (params) => {
+        {field:'industry',headerName:'Industry',width:170,renderCell: (params:any) => {
             return <div className="rowitem">{params.row.company.industry}</div>;
           }},
-        {field:'email',headerName:'Email',width:170,renderCell: (params) => {
+        {field:'email',headerName:'Email',width:170,renderCell: (params:any) => {
             return <div className="rowitem">{params.row.company.email}</div>;
           }},
-        {field:'phone',headerName:'Phone',width:150, renderCell: (params) => {
+        {field:'phone',headerName:'Phone',width:150, renderCell: (params:any) => {
             return <div className="rowitem">{params.row.company.phone}</div>;
           }},
         {field:'approve',headerName:'Approve',width:100, type:'boolean', editable:true},
         {field:'actions',headerName:'Action',width:200, type:'action',
-        renderCell:(params) => (<JobAction {...{params,rowId, setRowId,refresh,setRefresh}} />) },
+        renderCell:(params:any) => (<JobAction {...{params,rowId, setRowId,refresh,setRefresh}} />) },
       
 
         

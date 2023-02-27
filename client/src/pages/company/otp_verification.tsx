@@ -260,7 +260,7 @@ useEffect(() => {
                     {seconds < 10 ? `0${seconds}` : seconds}
                   </p>
                 ) : (
-                  <p>Didn't recieve code?</p>
+                  <p>Didnt recieve code?</p>
                 )}
               <div className="ml-auto">
                 <button
@@ -278,7 +278,7 @@ useEffect(() => {
                     companyDetails.otpverify=response;
                     setMinutes(1);
                     setSeconds(30);
-                    }catch(error){
+                    }catch(error:any){
                       toast.error(`${error.message}`, {
                         position: "top-right",
                         autoClose: 5000,

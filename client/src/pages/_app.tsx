@@ -14,15 +14,18 @@ import 'nprogress/nprogress.css'; //styles of nprogress
 import { io } from "socket.io-client";
 
 //Binding events. 
-
+import NotifyBar from '@/components/User/NotifyBar'
 export default function App({ Component, pageProps }: AppProps<{session:Session}>) {
 
 
   Router.events.on('routeChangeStart', () => NProgress.start()); Router.events.on('routeChangeComplete', () => NProgress.done()); Router.events.on('routeChangeError', () => NProgress.done());
-  const [userDetails, setUserDetails]= useState({})
+  const [userDetails, setUserDetails]= useState<any>({})
   const [postRefresh, setPostRefresh]= useState(false)
-  const [companyDetails, setCompanyDetails]= useState({})
-  const socket: any = useRef();
+  const [companyDetails, setCompanyDetails]= useState<any>({})
+  const [sendNotification, setSendNotification] = useState<any>(null)
+  const [recieveNotification, setRecieveNotification] = useState<any>(null)
+  const [socket,setSocket]= useState<any>(io("ws://localhost:8800"))
+  
   // useEffect(() => {
   //   if(socket.current ==null){
   //    socket.current = io("ws://localhost:8800")
@@ -34,14 +37,26 @@ export default function App({ Component, pageProps }: AppProps<{session:Session}
 
   return (
     <Provider store={store}>
-    <AppContext.Provider value={{
-      userDetails:userDetails,companyDetails,setCompanyDetails,socket:io("ws://localhost:8800"), setUserDetails:setUserDetails,postRefresh:postRefresh,setPostRefresh:setPostRefresh
-    }}>
+    <AppContext.Provider value={
+      {
+      userDetails:userDetails,
+      companyDetails,
+      setCompanyDetails,
+      socket:socket,
+      setUserDetails:setUserDetails,
+      postRefresh:postRefresh,
+      setPostRefresh:setPostRefresh,
+      sendNotification,
+      setSendNotification,
+      recieveNotification,
+      setRecieveNotification
+    }
+    }>
     
 <SessionProvider session={pageProps.session}>
   <Component {...pageProps} />
+  <NotifyBar />
 </SessionProvider>
-
 </AppContext.Provider>
 </Provider>
   );

@@ -10,7 +10,7 @@ import { useSelector } from "react-redux";
 function ChatWidgets({chats,currentUser,setCurrentChat}:any) {
   const users = useSelector((state:any)=>state.user.value)
   const router = useRouter()
-  const [user, setUser] = useState([])
+  const [user, setUser] = useState<any>([])
   const [searchContainer, setSearchContainer] = useState(false)
   const handleSearch = async (e:any)=>{
       const data = await SearchUser(e.target.value,{'usertoken':localStorage.getItem('usertoken')})
@@ -35,8 +35,8 @@ function ChatWidgets({chats,currentUser,setCurrentChat}:any) {
       {searchContainer &&
       <div className="bg-black   w-auto rounded  justify-center text-[#d9d9d9]">
         {
-          user && user.map((user)=>
-          <div className="bg-[#202327] flex flex-shrink items-center rounded border-b border-spacing-1">
+          user && user.map((user:any)=>
+          <div key={user?._id} className="bg-[#202327] flex flex-shrink items-center rounded border-b border-spacing-1">
             <img src={user?.image} className="rounded-full object-cover" height={50} width={50} alt="" />
            <div className="font-semibold ml-2 cursor-pointer" onClick={()=>router.push(`/user/${user?._id}`)}> {user?.firstname} {user?.lastname}</div>
            <div className="ml-auto mr-3 cursor-pointer"><Message /></div>

@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useDispatch, useSelector } from "react-redux";
-import {userActions} from "@/redux/signupdetails"
 import { useRouter } from "next/router";
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
@@ -64,7 +63,7 @@ function Copyright(props: any) {
 function Login() {
   let dispatch = useDispatch()
   const router = useRouter()
-  let smth = useSelector((state)=>state?.user)
+  let smth = useSelector((state:any)=>state?.user)
   const [email, setEmail] = useState(false)
   const [emailerr, setEmailerr] = useState('')
 

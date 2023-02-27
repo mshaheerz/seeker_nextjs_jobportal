@@ -12,8 +12,9 @@ import Jobs from "@/components/User/Jobs/Jobs";
 import { ArrowBack, Logout } from "@mui/icons-material";
 import swal from "sweetalert";
 import { getOneApplydJob, getOneJobNoAuth } from "@/config/endpoints";
-function JobDetailsPage({job}) {
-  let dispatch = useDispatch(user);
+function JobDetailsPage({job}:any) {
+  let dispatch = useDispatch();
+  //user
   const [applyd, setApplyd] = useState(false)
   let [userDetails, setUserDetails] = useState({});
   const router = useRouter();
@@ -56,10 +57,9 @@ function JobDetailsPage({job}) {
   const logout = () => {
     swal({
       title: "Are you sure?",
-      background: "black",
       text: "Once logout, you need to add credentials when login",
       icon: "warning",
-      buttons: true,
+      buttons: ["cancel","ok"],
       dangerMode: true,
     }).then((willDelete) => {
       if (willDelete) {
@@ -134,8 +134,8 @@ function JobDetailsPage({job}) {
                 <h6>Jobtype:</h6>
                 {
                     job.jobtype && (
-                        job.jobtype.map(element =>(
-                            <span className="mb-3 mr-2 text-xs inline-block py-1 px-2.5 leading-none text-center whitespace-nowrap align-baseline font-bold bg-[#2C2C32] text-white rounded">{element}</span>
+                        job.jobtype.map((element:any) =>(
+                            <span key={element} className="mb-3 mr-2 text-xs inline-block py-1 px-2.5 leading-none text-center whitespace-nowrap align-baseline font-bold bg-[#2C2C32] text-white rounded">{element}</span>
 
                         ))
                     )
@@ -144,8 +144,8 @@ function JobDetailsPage({job}) {
                 <h6>schedule:</h6>
                 {
                     job.schedule && (
-                        job.schedule.map(element =>(
-                            <span className="mb-3 mr-2 text-xs inline-block py-1 px-2.5 leading-none text-center whitespace-nowrap align-baseline font-bold bg-[#2C2C32] text-white rounded">{element}</span>
+                        job.schedule.map((element:any) =>(
+                            <span key={element} className="mb-3 mr-2 text-xs inline-block py-1 px-2.5 leading-none text-center whitespace-nowrap align-baseline font-bold bg-[#2C2C32] text-white rounded">{element}</span>
                         ))
                     )
                 }

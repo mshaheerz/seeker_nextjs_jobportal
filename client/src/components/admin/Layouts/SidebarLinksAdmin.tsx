@@ -1,7 +1,7 @@
 type objtype={
     text:string,
     active:boolean,
-    Icon:unknown
+    Icon:any
 }
 
 function SidebarLinksAdmin({Icon, text,active}:objtype) {

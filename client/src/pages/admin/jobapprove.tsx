@@ -13,7 +13,7 @@ import swal from 'sweetalert'
 import { useRouter } from 'next/router'
 import UserListsComponent from "@/components/admin/UserLists"
 import JobApproval from "@/components/admin/JobApproval"
-function jobApprovePage() {
+function JobApprovePage() {
     const router = useRouter()
     const [adminDetails, setAdminDetails] = useState('')
     useEffect(() => {
@@ -41,10 +41,9 @@ function jobApprovePage() {
      const logout=()=>{
         swal({
           title: "Are you sure?",
-          background:'black',
           text: "Once logout, you need to add credentials when login",
           icon: "warning",
-          buttons: true,
+          buttons: ["cancel","ok"],
           dangerMode: true,
         })
         .then((willDelete) => {
@@ -96,4 +95,4 @@ function jobApprovePage() {
   )
 }
 
-export default jobApprovePage
+export default JobApprovePage

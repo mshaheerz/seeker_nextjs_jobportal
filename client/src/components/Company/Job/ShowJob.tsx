@@ -82,7 +82,7 @@ function ShowJob() {
         </form>
       </div>
       {jobs?.length >0 &&
-        jobs.map((job) => (
+        jobs.map((job:any) => (
           <div key={job._id} className="ml-4 mr-4 mt-4">
             <div className="w-full p-4 text-center  border border-gray-200 rounded-lg shadow sm:p-8 bg-gray-900 dark:border-gray-700">
               <div className="flex justify-between space-y-4 sm:flex sm:space-y-0 sm:space-x-4 text-white">

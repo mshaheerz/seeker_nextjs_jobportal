@@ -71,11 +71,10 @@ function UserListsComponent() {
     sx={{
         boxShadow: 2,
         border: 1,
-       
       }}  
       columns={columns} 
       rows={users} 
-      getRowId={(row)=>row?._id}
+      getRowId={(row:any)=>row?._id}
       getRowSpacing={params=>({
         top:params.isFirstVisible ? 0 : 5,
         bottom: params.isLastVisible ? 0 : 5

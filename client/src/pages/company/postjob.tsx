@@ -11,7 +11,9 @@ import { companyInfo } from '@/redux/companyinfo'
 import { useDispatch, useSelector } from "react-redux";
 import PostJobComponent from "@/components/Company/Job/PostJob";
 function PostJob() {
-  let setCompanydetails = useDispatch(companyInfo)
+  let setCompanydetails = useDispatch()
+    //companyInfo
+
   let companyDetails = useSelector((state:any)=>state.companyinfo.value)
   const router = useRouter()
   useEffect(() => {
@@ -38,10 +40,9 @@ function PostJob() {
  const logout=()=>{
   swal({
     title: "Are you sure?",
-    background:'black',
     text: "Once logout, you need to add credentials when login",
     icon: "warning",
-    buttons: true,
+    buttons: ["cancel","ok"],
     dangerMode: true,
   })
   .then((willDelete) => {

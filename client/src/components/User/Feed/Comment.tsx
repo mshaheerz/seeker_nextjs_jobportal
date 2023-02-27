@@ -1,7 +1,21 @@
 import Moment from "react-moment"
-import {ChatBubbleLeftIcon,ChartBarIcon, EllipsisHorizontalIcon, HeartIcon, ShareIcon, TrashIcon} from "@heroicons/react/24/solid"
-
+import {ChatBubbleLeftIcon, EllipsisHorizontalIcon, ShareIcon, TrashIcon} from "@heroicons/react/24/solid"
+import { use, useEffect, useState } from "react"
+import { useDispatch, useSelector } from "react-redux"
+import { deleteComment } from "@/config/endpoints"
+import { refreshComment } from '@/redux/refreshcomment';
 function Comment({comment}:any) {
+  const [deleteIcon,setDeleteIcon] = useState(false)
+  const setCommentRefresh = useDispatch()
+  //refreshComment
+  const commentrefresh = useSelector((state:any)=>state.refreshcomment.value)
+ 
+  // useEffect(() => {
+    
+  
+   
+  // }, [])
+  let users = useSelector((state:any)=>state.user.value)
   return (
     <div className="p-3 flex cursor-pointer border-b border-gray-700">
         <img src={comment.user.profile ? comment.user.profile:'https://t3.ftcdn.net/jpg/01/18/01/98/360_F_118019822_6CKXP6rXmVhDOzbXZlLqEM2ya4HhYzSV.jpg'} alt="prof" className="h-11 w-11
@@ -35,9 +49,17 @@ function Comment({comment}:any) {
           </div>
 
           <div className="flex items-center space-x-1 group">
-            <div className="icon group-hover:bg-pink-600/10">
-              <TrashIcon className="h-5 group-hover:text-pink-600" />
+            {
+              comment?.user?._id===users?.userId && (
+                <div className="icon group-hover:bg-pink-600/10">
+              <TrashIcon className="h-5 group-hover:text-pink-600" onClick={async ()=>{
+                await deleteComment(comment._id,{"usertoken":localStorage.getItem("usertoken")})
+                setCommentRefresh(refreshComment(!commentrefresh))
+              }} />
             </div>
+              )
+            }
+            
             <span className="group-hover:text-pink-600 text-sm"></span>
           </div>
 

@@ -4,11 +4,11 @@ import { useEffect, useRef, useState } from "react";
   import Moment from "react-moment";
 
 function ChatBoxCompany({chat, companyDetails, setSendMessage, recieveMessage}:any) {
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState<any>([]);
   const [newMessage, setNewMessage] = useState("");
-  const [userData, setUserData] = useState(null);
+  const [userData, setUserData] = useState<any>(null);
 
-  const scroll = useRef()
+  const scroll = useRef<any>()
   useEffect(() => {
     const userId = chat?.members?.find((id: any) => id !== companyDetails?._id);
     const invoke = async () => {
@@ -76,7 +76,7 @@ function ChatBoxCompany({chat, companyDetails, setSendMessage, recieveMessage}:a
 
   return (
     
-    <div className="text-white bg-black w-[70%] h-screen rounded">
+    <div className="text-white bg-black w-[70%]  rounded">
       {!userData && (
         <div className="text-center mt-7 text-lg">Please select chat</div>
       )}
@@ -99,7 +99,7 @@ function ChatBoxCompany({chat, companyDetails, setSendMessage, recieveMessage}:a
           {/* chat box messages */}
 
           <div className={`${style.chatbody} no-scrollbar`}>
-            {messages.map((message) => (
+            {messages.map((message:any) => (
         
                 <div
                   ref={scroll}
@@ -119,24 +119,28 @@ function ChatBoxCompany({chat, companyDetails, setSendMessage, recieveMessage}:a
             ))}
           </div>
           {/* chat sender */}
+          <form>
           <div className={`${style.chatsender} border rounded`}>
             <div>+</div>
             <input
               type="text"
               onChange={(e: any) => setNewMessage(e.target.value)}
-              className="text-white border border-white  bg-black"
+              className="text-white border border-white  bg-black  "
               placeholder="type a message"
+              
             />
             <div>
               <button
               type="submit"
-                className="bg-white text-black rounded px-4 text-bold"
+                className="bg-white text-black rounded px-4 text-bold disabled:bg-slate-500"
                 onClick={handleSend}
+                disabled={newMessage.trim()===""}
               >
                 send
               </button>
             </div>
           </div>
+          </form>
         </>
       </div>)}
 

@@ -10,6 +10,16 @@ export async function deletePost(formData:any) {
     }
 }
 
+
+export async function deleteReport(formData:any) {
+    try {
+        const {data} = await axios.delete(`/report/${formData}`)
+        return data
+    } catch (error) {
+        
+    }
+}
+
 export async function fetchComments(formData:any,header:any) {
     try {
         const {data} =  await axios.get(`/fetch_comments/${formData}`,{headers:header})
@@ -339,3 +349,55 @@ export async function getNotification(formdata:any,header:any){
         
     }
 }
+
+export async function getUserNotification(formdata:any,header:any){
+    try {
+        const {data} = await axios.get(`/notification/${formdata}`,{headers:header})
+        return data;
+    } catch (error) {
+        
+    }
+}
+
+
+
+export async function deleteNotification(formData:any) {
+    try {
+        const {data} = await axios.delete(`/notification/${formData}`)
+        return data
+    } catch (error) {
+        
+    }
+}
+
+export async function getAllReports(header:any) {
+    try {
+        const {data} = await axios.get(`/admin/report`,{headers:header})
+        return data
+    } catch (error) {
+        
+    }
+}
+
+export async function deleteComment(formData:any,header:any) {
+    try {
+        const {data} = await axios.delete(`/comment/${formData}`,{headers:header})
+        return data
+    } catch (error) {
+        
+    }
+}
+
+
+
+
+export async function deleteAppliedJob(formData:any,header:any) {
+    try {
+        const {data} = await axios.delete(`/company/applyjob/${formData}`,{headers:header})
+        return data
+    } catch (error) {
+        
+    }
+}
+
+

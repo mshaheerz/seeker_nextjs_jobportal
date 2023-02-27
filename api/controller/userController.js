@@ -8,6 +8,7 @@ import jobmodel from "../model/jobSchema.js";
 import jobapplymodel from "../model/jobapplySchema.js";
 import companymodel from "../model/company/companySchema.js";
 import notificationmodel from "../model/notificationSchema.js";
+import reportmodel from "../model/reportSchema.js";
 
 export async function validateSignup(req, res) {
   try {
@@ -314,7 +315,7 @@ export async function deletePost(req, res) {
 export async function fetchComments(req, res) {
   try {
     const postId = req.params.postId
-    const comments = await commentmodel.find({ post: postId }).populate("user")
+    const comments = await commentmodel.find({ post: postId }).populate("user").sort({ updatedAt: -1 })
 
     res.json({ "status": "success", "message": "message fetched successfylly", comments })
   } catch (error) {
@@ -696,23 +697,40 @@ export async function getOneUserNoAuth(req, res) {
 
 export async function flagPost(req, res) {
   try {
+
     const userId = req.userId;
-    const {flag , postId} = req.body
-    const user = await postmodel.findById(postId)
-    const isUserReported = user.reports.find((obj)=>obj.userId.toString()===userId.toString())
-    console.log(isUserReported)
-    user.reports.forEach(data=>console.log(data))
-    console.log(isUserReported)
-   if(isUserReported){
-    res.json({ "status": "failed", message: 'already reported' })
-   }else{
-    const doc= await postmodel.findById(postId)
-    doc.reports.push({userId:userId,report:flag})
-    await doc.save()
-    res.json({ "status": "success", user: doc })
-   }
-  
-    
+    const { flag, postId } = req.body
+    const user = await reportmodel.findOne({ post: postId })
+
+    if (!user) {
+      try {
+        await reportmodel.create({
+          post: postId,
+          reports: [{ userId: userId, report: flag }]
+        })
+        res.json({ "status": "success", message: 'reported' })
+
+      } catch (e) {
+        console.log(e)
+      }
+
+    } else {
+      const isUserReported = user.reports.find((obj) => obj.userId.toString() === userId.toString())
+      console.log(isUserReported)
+      user.reports.forEach(data => console.log(data))
+      console.log(isUserReported)
+      if (isUserReported) {
+        res.json({ "status": "failed", message: 'already reported' })
+      } else {
+        const doc = await reportmodel.findOne({ post: postId })
+        doc.reports.push({ userId: userId, report: flag })
+        await doc.save()
+        res.json({ "status": "success", user: doc })
+      }
+    }
+
+
+
   } catch (error) {
     res.json({ "status": "failed", "message": error.message })
   }
@@ -724,22 +742,22 @@ export async function flagPost(req, res) {
 
 export async function PostNotification(req, res) {
   try {
-   
-    const {authorUser , authorCompany, recieverUser, recieverCompany,href,content} = req.body
-    console.log(authorUser , authorCompany, recieverUser, recieverCompany,href,content)
+
+    const { authorUser, authorCompany, recieverUser, recieverCompany, href, content } = req.body
+    console.log(authorUser, authorCompany, recieverUser, recieverCompany, href, content)
 
     await notificationmodel.create({
-      authorUser:authorUser || null,
-      authorCompany:authorCompany || null,
+      authorUser: authorUser || null,
+      authorCompany: authorCompany || null,
       recieverUser: recieverUser || null,
       recieverCompany: recieverCompany || null,
-      content:content,
-      href:href || null,
+      content: content,
+      href: href || null,
     })
-    res.json({ "status": "success", message:'notification updated success' })
-  
-  
-    
+    res.json({ "status": "success", message: 'notification updated success' })
+
+
+
   } catch (error) {
     res.json({ "status": "failed", "message": error.message })
     console.log(error)
@@ -749,16 +767,76 @@ export async function PostNotification(req, res) {
 
 export async function getCompanyNotification(req, res) {
   try {
-   
+
     const companyId = req.params.companyId
 
-    const notification = await notificationmodel.find({recieverCompany:req.companyId})
-    res.json({ "status": "success", notification:notification })
-  
-  
-    
+    const notification = await notificationmodel.find({ recieverCompany: req.companyId }).sort({ createdAt: -1 })
+    res.json({ "status": "success", notification: notification })
+
+
+
   } catch (error) {
     res.json({ "status": "failed", "message": error.message })
     console.log(error)
   }
 }
+
+
+
+export async function getUserNotification(req, res) {
+  try {
+
+    const userId = req.params.userId
+
+    const notification = await notificationmodel.find({ recieverUser: req.userId }).sort({ createdAt: -1 })
+    res.json({ "status": "success", notification: notification })
+
+
+
+  } catch (error) {
+    res.json({ "status": "failed", "message": error.message })
+    console.log(error)
+  }
+}
+
+
+export async function DeleteNotification(req, res) {
+  try {
+    const notificationId = req.params.notificationId
+    await notificationmodel.findByIdAndDelete(notificationId)
+    res.json({ "status": "success", "message": "notification deleted successfully" })
+  } catch (error) {
+    res.json({ "status": "failed", "message": error.message })
+  }
+}
+
+
+export async function deleteReport(req, res) {
+  try {
+    const postId = req.params.id
+    if (postId) {
+      await reportmodel.findOneAndDelete({ post: postId })
+      res.json({ "status": "success", "message": 'post deleted successfully' })
+    } else {
+      res.json({ "status": "failed", "message": 'something went wrong' })
+    }
+
+  } catch (error) {
+    res.json({ "status": "failed", "message": error.message })
+  }
+}
+
+export async function deleteComment(req, res) {
+  try {
+    const commentId = req.params.commentId;
+
+    await commentmodel.findByIdAndDelete(commentId)
+
+    res.json({ "status": "success", "message": "comment deletion success" })
+  } catch (error) {
+    res.json({ "status": "failed", "message": error.message })
+  }
+}
+
+
+

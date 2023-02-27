@@ -47,7 +47,7 @@ function JobListComponent() {
         {field:'approved',headerName:'approved',width:200, type:'boolean', editable:true},
         {field:'isBanned',headerName:'Banned',width:100, type:'boolean', editable:true},
         {field:'actions',headerName:'Action',width:200, type:'action',
-        renderCell:(params) => (<JobActions {...{params,rowId, setRowId}} />) },
+        renderCell:(params:any) => (<JobActions {...{params,rowId, setRowId}} />) },
       
 
         
@@ -80,14 +80,14 @@ function JobListComponent() {
       }}  
       columns={columns} 
       rows={job} 
-      getRowId={(row)=>row?._id}
+      getRowId={(row:any)=>row?._id}
       getRowSpacing={params=>({
         top:params.isFirstVisible ? 0 : 5,
         bottom: params.isLastVisible ? 0 : 5
 
 
       })}
-      onCellEditCommit={params=>setRowId(params.id)}
+      onCellEditCommit={(params:any)=>setRowId(params.id)}
         />
    </Box>
    </ThemeProvider>
